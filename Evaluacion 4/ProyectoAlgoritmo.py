@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from estructuras_datos import Pila, Cola
 
 #Clase para la lectura de los datos, lee las rutas dentro del config.txt, para despues cargar los datos de los json
 class Configuracion:
@@ -66,12 +67,12 @@ class Configuracion:
         #Temporal para mostrar que hacia bien la lectura
         proyectos = self.cargar_datos_desde_json()
         self.cargar_subtareas_desde_json(proyectos)
-        for proyecto in proyectos:
+        """for proyecto in proyectos:
             print(f"Proyecto: {proyecto.nombre}")
             for tarea in proyecto.tareas:
                 print(f"    Tarea: {tarea.nombre}")
                 for subtarea in tarea.subtareas:
-                    print(f"        Subtarea: {subtarea.nombre}")
+                    print(f"        Subtarea: {subtarea.nombre}")"""
         return proyectos 
 
 class Proyecto:
@@ -246,39 +247,278 @@ class ProyectoManager:
             return
         for i, proyecto in enumerate(self.lista_proyectos, start=1):
             print(f"{i}. {proyecto.nombre}")
+    #Funciones subMenu: menu_tareas
+    def agregar_tarea(self, proyecto):
+        id = input("Ingrese el ID de la tarea: ")
+        nombre = input("Ingrese el nombre de la tarea: ")
+        empresa_cliente = input("Ingrese la empresa cliente de la tarea: ")
+        descripcion = input("Ingrese la descripción de la tarea: ")
+        fecha_inicio = input("Ingrese la fecha de inicio de la tarea (aaaa-mm-dd): ")
+        fecha_vencimiento = input("Ingrese la fecha de vencimiento de la tarea (aaaa-mm-dd): ")
+        estado = input("Ingrese el estado actual de la tarea: ")
+        porcentaje = input("Ingrese el porcentaje de la tarea: ")
 
+        nueva_tarea = Tarea(id, nombre, empresa_cliente, descripcion, fecha_inicio, fecha_vencimiento, estado, porcentaje)
+        proyecto.tareas.append(nueva_tarea)
+        print("\nTarea agregada con éxito.")
+
+    def insertar_tarea(self, proyecto):
+        id = input("Ingrese el ID de la tarea: ")
+        nombre = input("Ingrese el nombre de la tarea: ")
+        empresa_cliente = input("Ingrese la empresa cliente de la tarea: ")
+        descripcion = input("Ingrese la descripción de la tarea: ")
+        fecha_inicio = input("Ingrese la fecha de inicio de la tarea (aaaa-mm-dd): ")
+        fecha_vencimiento = input("Ingrese la fecha de vencimiento de la tarea (aaaa-mm-dd): ")
+        estado = input("Ingrese el estado actual de la tarea: ")
+        porcentaje = input("Ingrese el porcentaje de la tarea: ")
+        posicion = int(input("Ingrese la posición donde insertar la tarea: "))
+
+        nueva_tarea = Tarea(id, nombre, empresa_cliente, descripcion, fecha_inicio, fecha_vencimiento, estado, porcentaje)
+        proyecto.tareas.insert(posicion, nueva_tarea)
+        print("\nTarea insertada con éxito.")
+
+    def eliminar_tarea(self, proyecto):
+        id = input("Ingrese el ID de la tarea a eliminar: ")
+        for tarea in proyecto.tareas:
+            if tarea.id == id:
+                proyecto.tareas.remove(tarea)
+                print("\nTarea eliminada con éxito.")
+                return
+        print("\nTarea no encontrada.")
+
+    def buscar_tarea(self, proyecto):
+        criterio = input("Ingrese el criterio de búsqueda (ID, nombre, empresa cliente, etc.): ")
+        valor = input("Ingrese el valor del criterio: ")
+        for tarea in proyecto.tareas:
+            if getattr(tarea, criterio) == valor:
+                print("\nTarea encontrada:")
+                print(f"ID: {tarea.id}")
+                print(f"Nombre: {tarea.nombre}")
+                print(f"Empresa cliente: {tarea.empresa_cliente}")
+                print(f"Descripción: {tarea.descripcion}")
+                print(f"Fecha de inicio: {tarea.fecha_inicio.date()}")
+                print(f"Fecha de vencimiento: {tarea.fecha_vencimiento.date()}")
+                print(f"Estado: {tarea.estado}")
+                print(f"Porcentaje: {tarea.porcentaje}")
+                return
+        print("\nTarea no encontrada.")
+
+    def actualizar_tarea(self, proyecto):
+        id = input("Ingrese el ID de la tarea a actualizar: ")
+        for tarea in proyecto.tareas:
+            if tarea.id == id:
+                tarea.nombre = input("Ingrese el nuevo nombre de la tarea: ")
+                tarea.empresa_cliente = input("Ingrese la nueva empresa cliente de la tarea: ")
+                tarea.descripcion = input("Ingrese la nueva descripción de la tarea: ")
+                tarea.fecha_inicio = input("Ingrese la nueva fecha de inicio de la tarea (aaaa-mm-dd): ")
+                tarea.fecha_vencimiento = input("Ingrese la nueva fecha de vencimiento de la tarea (aaaa-mm-dd): ")
+                tarea.estado = input("Ingrese el nuevo estado actual de la tarea: ")
+                tarea.porcentaje = input("Ingrese el nuevo porcentaje de la tarea: ")
+                print("\nTarea actualizada con éxito.")
+                return
+        print("\nTarea no encontrada.")
+
+    def mostrar_tareas(self, proyecto):
+        if proyecto.tareas:
+            print("Tareas del proyecto:")
+            for i, tarea in enumerate(proyecto.tareas, start=1):
+                print(f"{i}. {tarea.nombre}")
+                for subtarea in tarea.subtareas:
+                    print(f"  - {subtarea.nombre}")
+        else:
+            print("No hay tareas en el proyecto")
+
+        #Funciones del menu: "menu_tareas_prioritarias"
+    def agregar_tarea_prioritaria(self, proyecto):
+        id = input("Ingrese el ID de la tarea: ")
+        nombre = input("Ingrese el nombre de la tarea: ")
+        empresa_cliente = input("Ingrese la empresa cliente de la tarea: ")
+        descripcion = input("Ingrese la descripción de la tarea: ")
+        fecha_inicio = input("Ingrese la fecha de inicio de la tarea (dd-mm-aaaa): ")
+        fecha_vencimiento = input("Ingrese la fecha de vencimiento de la tarea (dd-mm-aaaa): ")
+        estado = input("Ingrese el estado actual de la tarea: ")
+        porcentaje = int(input("Ingrese el porcentaje de la tarea: "))
+
+        tarea = Tarea(id, nombre, empresa_cliente, descripcion, fecha_inicio, fecha_vencimiento, estado, porcentaje)
+        proyecto.tareas_prioritarias.push(tarea)
+
+    def eliminar_tarea_prioritaria(self, proyecto):
+        if not proyecto.tareas_prioritarias.esta_vacia():
+            return proyecto.tareas_prioritarias.pop()
+        return None
+
+    def consultar_tarea_prioritaria(self, proyecto):
+        if not proyecto.tareas_prioritarias.esta_vacia():
+            return proyecto.tareas_prioritarias.peek()
+        return None
+
+    def tiempo_total_tareas_prioritarias(self, proyecto):
+        tiempo_total = 0
+        for tarea in proyecto.tareas_prioritarias.elementos:
+            tiempo_total += tarea.fecha_vencimiento - tarea.fecha_inicio
+        return tiempo_total
+    
     def menu(self):
+
         while True:
-            print("-"*30)
-            print("Menú de Gestión de Proyectos")
-            print("1. Crear Proyecto")
-            print("2. Modificar Proyecto")
-            print("3. Consultar Proyecto")
-            print("4. Eliminar Proyecto")
-            print("5. Listar Proyectos")
-            print("6. Salir")
-            print("-"*30)
+            print("\n                 Menú de Gestión de Proyectos")
+            print("-"*60)
+            print("  1. Crear Proyecto")
+            print("  2. Modificar Proyecto")
+            print("  3. Consultar Proyecto")
+            print("  4. Eliminar Proyecto")
+            print("  5. Listar Proyectos")
+            print("  6. Listar Proyectos por filtro") 
+            print("  7. Seleccionar proyecto para gestion de tareas") #Puedo unificarlo en listar proyectos y al finalizar se pregunta si quiere seleccionar uno o no
+            print("  8. Gestionar las tareas de todos los proyectos")
+            print("  9. Salir")
+            print("-"*60)
+            n = int(input("Seleccione una opción (1-9): "))
 
-            opcion = input("Seleccione una opción (1-6): ")
-
-            if opcion == '1':
+            if n == 1:
                 self.crear_proyecto()
-            elif opcion == '2':
+
+            elif n == 2:
                 self.modificar_proyecto()
-            elif opcion == '3':
+
+            elif n == 3:
                 self.consultar()
-            elif opcion == '4':
+
+            elif n == 4:
                 self.eliminar()
-            elif opcion == '5':
+
+            elif n == 5:
                 self.listar_nombres_proyectos()
-            elif opcion == '6':
-                print("Saliendo del menú...")
+            
+            elif n == 6:
+                return None
+
+            elif n == 7:
+                t = True
+                while t:
+                    self.listar_nombres_proyectos()
+                    f = input("\nSeleccione el proyecto por id o nombre: ")
+                    proyecto_selec = self.buscar_proyecto("id",f)
+                    print(f"\n          Gestión de Tareas del Proyecto: {proyecto_selec.nombre}")
+                    print("     "+"-"*55)
+                    print("       1. Listar todas las tareas y subtareas de forma jerarquica")
+                    print("       2. Agregar tarea")
+                    print("       3. Insertar tarea en una posicion especifica")
+                    print("       4. Eliminar tarea")
+                    print("       5. Buscar tarea")
+                    print("       6. Actualizar informacion tarea")
+                    print("       7. Salir al menu principal")
+
+                    op = int(input("       Seleccione una opción (1-7): "))
+                    if op == 1:
+                        return 
+                    elif op == 2:
+                        return
+                    elif op == 3:
+                        return
+                    elif op == 4:
+                        return
+                    elif op == 5:
+                        return
+                    elif op == 6:
+                        return
+                    elif op == 7:
+                        print("       \nSaliendo del menu...")
+                        t = False
+                    else:
+                        print("\n       Opción no válida. Por favor, intente de nuevo.")
+                    
+
+            elif n == 8:
+                c = True
+                while c:
+                    print("\n                   Gestión de Todas las Tareas")
+                    print("     "+"-"*55)
+                    print("       1. Consultar todas las tarear por estado")
+                    print("       2. Filtrar tareas por fechas")
+                    print("       3. Tareas Prioritarias")
+                    print("       4. Tareas Por Finalizar")
+                    print("       5. Salir al menu principal")
+                    print("     "+"-"*55)
+                    m = int(input("       Seleccione una opción (1-5): "))
+
+                    if m == 1:
+                        return None
+
+                    elif m == 2:
+                        return None
+
+                    elif m == 3:
+                        cc = True
+                        while cc:
+                            print("\n                         Tareas Prioritarias") #Estas se deben cambiar al otro, pero las deje aqui mientras
+                            print("          "+"-"*50)
+                            print("                 1. Agregar Tarea Prioritaria")
+                            print("                 2. Eliminar Tarea Prioritaria")
+                            print("                 3. Consultar Tarea Prioritaria")
+                            print("                 4. Tiempo Total de Tareas Prioritarias")
+                            print("                 5. Salir al menu anterior")
+                            print("          "+"-"*50)
+                            op = int(input("       Seleccione una opción (1-5): "))
+                            if op == 1:
+                                return 
+                            elif op == 2:
+                                return
+                            elif op == 3:
+                                return
+                            elif op == 4:
+                                return
+                            elif op == 5:
+                                print("       \nSaliendo del menu...")
+                                cc = False
+                            else:
+                                print("\n       Opción no válida. Por favor, intente de nuevo.")
+
+                    elif m == 4:
+                        cf = True
+                        while cf:
+                            print("\n                         Tareas Por Finalizar") #Estas se deben cambiar al otro, pero las deje aqui mientras
+                            print("          "+"-"*50)
+                            print("                 1. Agregar Tarea ")
+                            print("                 2. Eliminar Tarea ")
+                            print("                 3. Consultar Tarea ")
+                            print("                 4. Tiempo Total de Tareas ")
+                            print("                 5. Salir al menu anterior")
+                            print("          "+"-"*50)
+                            op = int(input("       Seleccione una opción (1-5): "))
+                            if op == 1:
+                                return 
+                            elif op == 2:
+                                return
+                            elif op == 3:
+                                return
+                            elif op == 4:
+                                return
+                            elif op == 5:
+                                print("       \nSaliendo del menu...")
+                                cf = False
+                            else:
+                                print("\n       Opción no válida. Por favor, intente de nuevo.")
+
+                    elif m == 5:
+                        print("       \nSaliendo del menu...")
+                        c = False
+
+                    else:
+                        print("\nOpción no válida. Por favor, intente de nuevo.")
+                    
+
+            elif n == 9:
+
+                print("\nSaliendo del programa...")
                 break
+                
+
             else:
                 print("\nOpción no válida. Por favor, intente de nuevo.")
+                
 
-
-
+#Luego veo si lo optimizo, lo importante es que funcione :D
 
 pro = Configuracion("C:/Users/fches/OneDrive/Documents/Python/Algoritmo/Evaluacion 4/config.txt") #Metan los archivos .json y .txt en la misma carpeta del proyecto y cambien las rutas
 pross = pro.mostrar_datos()
