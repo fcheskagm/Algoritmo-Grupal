@@ -1,0 +1,48 @@
+{
+  "1": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Subtarea 1",
+          "descripcion": "Descripción de la subtarea 1",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Subtarea 2",
+          "descripcion": "Descripción de la subtarea 2",
+          "estado": "Pendiente"
+        }
+      ],
+      "2": [
+        {
+          "id": 3,
+          "nombre": "Subtarea 3",
+          "descripcion": "Descripción de la subtarea 3",
+          "estado": "Completada"
+        }
+      ]
+    }
+  },
+  "2": {
+    "tareas": {
+      "1": [
+        {
+          "id": 4,
+          "nombre": "Subtarea 4",
+          "descripcion": "Descripción de la subtarea 4",
+          "estado": "Completada"
+        }
+      ],
+      "2": [
+        {
+          "id": 5,
+          "nombre": "Subtarea 5",
+          "descripcion": "Descripción de la subtarea 5",
+          "estado": "Completada"
+        }
+      ]
+    }
+  }
+}

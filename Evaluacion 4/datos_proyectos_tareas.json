@@ -1,0 +1,74 @@
+{
+  "proyectos": [
+    {
+      "id": 1,
+      "nombre": "Proyecto 1",
+      "descripcion": "Descripción del proyecto 1",
+      "fecha_inicio": "2024-06-01",
+      "fecha_vencimiento": "2024-06-30",
+      "estado": "En progreso",
+      "empresa": "Empresa A",
+      "gerente": "Gerente A",
+      "equipo": "Equipo A",
+      "tareas": [
+                  {
+                "id": 1,
+                "nombre": "Tarea 1",
+                "empresa_cliente": "Empresa A",
+                "descripcion": "Descripción de la tarea 1",
+                "fecha_inicio": "2024-06-01",
+                "fecha_vencimiento": "2024-06-30",
+                "estado": "En progreso",
+                "porcentaje": 50,
+                "subtareas": [1, 2]
+              },
+              {
+                "id": 2,
+                "nombre": "Tarea 2",
+                "empresa_cliente": "Empresa A",
+                "descripcion": "Descripción de la tarea 2",
+                "fecha_inicio": "2024-06-02",
+                "fecha_vencimiento": "2024-06-10",
+                "estado": "En progreso",
+                "porcentaje": 30,
+                "subtareas": [3]
+                }
+              ]
+    },
+    {
+      "id": 2,
+      "nombre": "Proyecto 2",
+      "descripcion": "Descripción del proyecto 2",
+      "fecha_inicio": "2024-07-01",
+      "fecha_vencimiento": "2024-07-31",
+      "estado": "En progreso",
+      "empresa": "Empresa B",
+      "gerente": "Gerente B",
+      "equipo": "Equipo B",
+      "tareas": [
+                      {
+                "id": 1,
+                "nombre": "Tarea 1",
+                "empresa_cliente": "Empresa C",
+                "descripcion": "Descripción de la tarea 3",
+                "fecha_inicio": "2024-07-01",
+                "fecha_vencimiento": "2024-07-15",
+                "estado": "En progreso",
+                "porcentaje": 25,
+                "subtareas": [4]
+                },
+                  {
+                "id": 2,
+                "nombre": "Tarea 2",
+                "empresa_cliente": "Empresa D",
+                "descripcion": "Descripción de la tarea 4",
+                "fecha_inicio": "2024-07-16",
+                "fecha_vencimiento": "2024-07-31",
+                "estado": "En progreso",
+                "porcentaje": 10,
+                "subtareas": [5]
+                }
+              ]
+    }
+  ]
+}
