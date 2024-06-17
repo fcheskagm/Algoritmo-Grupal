@@ -1,14 +1,19 @@
 from datetime import datetime
 import json
 
+#Clase para la lectura de los datos, lee las rutas dentro del config.txt, para despues cargar los datos de los json
 class Configuracion:
     def __init__(self, archivo_config):
+
+        #Guarda ambas rutas encontradas en el txt 
         with open(archivo_config, "r") as archivo:
             self.datos = archivo.readlines()
             self.ruta_datos = self.datos[0].strip()
             self.ruta_subtareas = self.datos[1].strip()
 
     def cargar_datos_desde_json(self):
+
+        #Guarda los datos del primer archivo, creandolo como un constructor de la clase proyecto, al igual que las tareas, y los agrega a la lista de proyectos
         proyectos = []
         with open(self.ruta_datos, "r") as archivo:
             datos = json.load(archivo)
@@ -40,6 +45,8 @@ class Configuracion:
         return proyectos
 
     def cargar_subtareas_desde_json(self, proyectos):
+
+        #le pasamos como atributo los proyectos, para que lea los indices y alli cargue las subtareas
         with open(self.ruta_subtareas, "r") as archivo_subtareas:
             subtareas_data = json.load(archivo_subtareas)
             for proyecto in proyectos:
@@ -56,6 +63,7 @@ class Configuracion:
                                 tarea.agregar_subtarea(subtarea)
 
     def mostrar_datos(self):
+        #Temporal para mostrar que hacia bien la lectura
         proyectos = self.cargar_datos_desde_json()
         self.cargar_subtareas_desde_json(proyectos)
         for proyecto in proyectos:
@@ -67,6 +75,7 @@ class Configuracion:
         return proyectos 
 
 class Proyecto:
+    #Se declaran los atributos que conforman al proyecto
     def __init__(self, id, nombre, descripcion, fecha_inicio, fecha_vencimiento, estado, empresa, gerente, equipo):
         self.id = id
         self.nombre = nombre
@@ -79,10 +88,12 @@ class Proyecto:
         self.equipo = equipo
         self.tareas = []
 
+    #Hecemos el metodo para agregar las tareas a la lista 
     def agregar_tarea(self, tarea):
         self.tareas.append(tarea)
 
 class Tarea:
+    #Se declaran los atributos que conforman la tarea
     def __init__(
         self,
         id,
@@ -104,11 +115,13 @@ class Tarea:
         self.porcentaje = porcentaje
         self.subtareas = []
 
+    #Hecemos el metodo para agregar las subtareas a la lista
     def agregar_subtarea(self, subtarea):
         self.subtareas.append(subtarea)
 
 
 class Subtarea:
+    #Se declaran los atributos que conforman la subtarea
     def __init__(self, id, nombre, descripcion, estado):
         self.id = id
         self.nombre = nombre
@@ -117,25 +130,40 @@ class Subtarea:
 
 
 class ProyectoManager:
+    #Clase para gestionar los proyectos
     def __init__(self, proyectos):
         self.lista_proyectos = proyectos
     
+    #Metodo para buscar un proyecto segun un criterio y valor dado
     def buscar_proyecto(self, criterio, valor):
         encontrado = False
+        criterios_map = {
+            "id": "id",
+            "nombre": "nombre",
+            "descripcion": "descripcion",
+            "fecha inicio": "fecha_inicio",
+            "fecha vencimiento": "fecha_vencimiento",
+            "estado": "estado",
+            "empresa": "empresa",
+            "gerente": "gerente",
+            "equipo": "equipo",
+        }
         for proyecto in self.lista_proyectos:
             try:
-                if getattr(proyecto, criterio) == valor:
+                if criterio in ["fecha inicio", "fecha vencimiento"]:
+                    valor = datetime.strptime(valor, "%Y-%m-%d")
+                if getattr(proyecto, criterios_map[criterio]) == valor:
                     return proyecto
                 encontrado = True
             except AttributeError:
                 pass
         if not encontrado:
             print(f"\nError: El criterio ' {criterio} ' no existe")
-            print("Los criterios existentes son: \n[id, nombre, descripción, fecha_inicio, fecha_vencimiento, estado, empresa, gerente, equipo]")
+            print("Los criterios existentes son: \n[id, nombre, descripción, fecha inicio, fecha vencimiento, estado, empresa, gerente, equipo]")
         return None
 
     def crear_proyecto(self):
-        # Solicitar al usuario los datos del proyecto
+        # Solicitar al usuario los datos del proyecto para agregarlo a la kista de proyectos
         id = input("Ingrese el ID del proyecto: ")
         nombre = input("Ingrese el nombre del proyecto: ")
         descripcion = input("Ingrese la descripción del proyecto: ")
@@ -151,6 +179,7 @@ class ProyectoManager:
         print("\nProyecto creado con éxito.")
 
     def modificar_proyecto(self):
+        #Pedimos que nos ingrese el criterio y valor para buscar el proyecto y, se pregunta que se quiere modificar
         criterio = input("Introduzca el criterio de búsqueda: ")
         valor = input("Introduzca el valor del criterio: ")
         proyecto = self.buscar_proyecto(criterio.lower(), valor)
@@ -179,6 +208,7 @@ class ProyectoManager:
             print("\nProyecto no encontrado")
 
     def consultar(self):
+        #Pedimos que nos ingrese el criterio y valor para buscar el proyecto a consultar
         criterio = input("Introduzca el criterio de búsqueda: ")
         valor = input("Introduzca el valor del criterio: ")
         proyecto = self.buscar_proyecto(criterio.lower(), valor)
@@ -198,6 +228,7 @@ class ProyectoManager:
             print("\nProyecto no encontrado")
 
     def eliminar(self):
+        #Pedimos que nos ingrese el criterio y valor para buscar el proyecto a eliminar
         criterio = input("Introduzca el criterio de búsqueda: ")
         valor = input("Introduzca el valor del criterio: ")
         proyecto = self.buscar_proyecto(criterio.lower(), valor)
@@ -209,6 +240,7 @@ class ProyectoManager:
             print("\nProyecto no encontrado")
 
     def listar_nombres_proyectos(self):
+        #Listamos todos los proyectos
         if not self.lista_proyectos:
             print("No hay proyectos para listar.")
             return
@@ -248,7 +280,7 @@ class ProyectoManager:
 
 
 
-pro = Configuracion("C:/Users/fches/OneDrive/Documents/Python/Algoritmo/Evaluacion 4/config.txt")
+pro = Configuracion("C:/Users/fches/OneDrive/Documents/Python/Algoritmo/Evaluacion 4/config.txt") #Metan los archivos .json y .txt en la misma carpeta del proyecto y cambien las rutas
 pross = pro.mostrar_datos()
 
 manager = ProyectoManager(pross)
