@@ -80,6 +80,8 @@ class Proyecto:
         self.gerente = gerente
         self.equipo = equipo
         self.tareas = ListaEntrelazada()
+        self.tareas_prioritarias = Pila()
+        self.tareas_proximas_a_vencer = Cola()
 
     #Hecemos el metodo para agregar las tareas a la lista 
     def agregar_tarea(self, tarea):
@@ -130,23 +132,10 @@ class ProyectoManager:
     #Metodo para buscar un proyecto segun un criterio y valor dado
     def buscar_proyecto(self, criterio, valor):
         encontrado = False
-        criterios_map = {
-            "id": "id",
-            "nombre": "nombre",
-            "descripcion": "descripcion",
-            "fecha inicio": "fecha_inicio",
-            "fecha vencimiento": "fecha_vencimiento",
-            "estado": "estado",
-            "empresa": "empresa",
-            "gerente": "gerente",
-            "equipo": "equipo",
-        }
         for proyecto in self.lista_proyectos:
-            try:
-                if criterio in ["fecha inicio", "fecha vencimiento"]:
-                    valor = datetime.strptime(valor, "%Y-%m-%d")
-                if getattr(proyecto, criterios_map[criterio]) == valor:
-                    return proyecto
+            try:   
+                if getattr(proyecto, criterio) == valor:
+                        return proyecto
                 encontrado = True
             except AttributeError:
                 pass
@@ -161,7 +150,9 @@ class ProyectoManager:
         nombre = input("Ingrese el nombre del proyecto: ")
         descripcion = input("Ingrese la descripción del proyecto: ")
         fecha_inicio = input("Ingrese la fecha de inicio del proyecto (aaaa-mm-dd): ")
+        fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
         fecha_vencimiento = input("Ingrese la fecha de vencimiento del proyecto (aaaa-mm-dd): ")
+        fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%Y-%m-%d")
         estado = input("Ingrese el estado actual del proyecto: ")
         empresa = input("Ingrese la empresa del proyecto: ")
         gerente = input("Ingrese el gerente del proyecto: ")
@@ -169,7 +160,7 @@ class ProyectoManager:
 
         nuevo_proyecto = Proyecto(id, nombre, descripcion, fecha_inicio, fecha_vencimiento, estado, empresa, gerente, equipo)
         self.lista_proyectos.append(nuevo_proyecto)
-        print("\nProyecto creado con éxito.")
+        print("\nProyecto creado con éxito.")   #AGREFAR TAREAS??? O PREGUNTO??? O NO xd!!!!!!!!!!!!!!!
 
     def modificar_proyecto(self):
         #Pedimos que nos ingrese el criterio y valor para buscar el proyecto y, se pregunta que se quiere modificar
@@ -177,15 +168,17 @@ class ProyectoManager:
         valor = input("Introduzca el valor del criterio: ")
         proyecto = self.buscar_proyecto(criterio.lower(), valor)
         if proyecto:
-            accion = input("Indique qué desea modificar (nombre, descripcion, fechaInicio, fechaVencimiento, estado, empresa, gerente, equipo): ")
+            accion = input("Indique qué desea modificar (nombre, descripcion, fecha inicio, fecha vencimiento, estado, empresa, gerente, equipo): ")
             if accion == "nombre":
                 proyecto.nombre = input("Ingrese el nuevo nombre del proyecto: ")
             elif accion == "descripcion":
                 proyecto.descripcion = input("Ingrese la nueva descripción del proyecto: ")
-            elif accion == "fechaInicio":
-                proyecto.fecha_inicio = input("Ingrese la nueva fecha de inicio del proyecto (aaaa-mm-dd): ")
-            elif accion == "fechaVencimiento":
-                proyecto.fecha_vencimiento = input("Ingrese la nueva fecha de vencimiento del proyecto (aaaa-mm-dd): ")
+            elif accion == "fecha inicio":
+                fecha_inicio = input("Ingrese la nueva fecha de inicio del proyecto (aaaa-mm-dd): ")
+                proyecto.fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+            elif accion == "fecha vencimiento":
+                fecha_vencimiento = input("Ingrese la nueva fecha de vencimiento del proyecto (aaaa-mm-dd): ")
+                proyecto.fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%Y-%m-%d")
             elif accion == "estado":
                 proyecto.estado = input("Ingrese el nuevo estado del proyecto: ")
             elif accion == "empresa":
@@ -200,13 +193,13 @@ class ProyectoManager:
         else:
             print("\nProyecto no encontrado")
 
-    def consultar(self):
+    def consultar_proyecto(self):
         #Pedimos que nos ingrese el criterio y valor para buscar el proyecto a consultar
-        criterio = input("Introduzca el criterio de búsqueda: ")
+        criterio = input("\nIntroduzca el criterio de búsqueda: ")
         valor = input("Introduzca el valor del criterio: ")
         proyecto = self.buscar_proyecto(criterio.lower(), valor)
         if proyecto:
-            print("-"*30)
+            print("-"*60)
             print(f"ID: {proyecto.id}")
             print(f"Nombre: {proyecto.nombre}")
             print(f"Descripción: {proyecto.descripcion}")
@@ -219,6 +212,22 @@ class ProyectoManager:
             print("\nProyecto consultado con éxito.")
         else:
             print("\nProyecto no encontrado")
+
+    def consultar(self, proyectos):
+ 
+        for proyecto in proyectos:
+            print(f"\tNombre: {proyecto.nombre}")
+            print(f"\tDescripción: {proyecto.descripcion}")
+            print(f"\tFecha de Inicio: {proyecto.fecha_inicio.date()}")
+            print(f"\tFecha de Vencimiento: {proyecto.fecha_vencimiento.date()}")
+            print(f"\tEstado: {proyecto.estado}")
+            print(f"\tEmpresa: {proyecto.empresa}")
+            print(f"\tGerente: {proyecto.gerente}")
+            print(f"\tEquipo: {proyecto.equipo}")
+            print("\n")
+        
+
+
 
     def eliminar(self):
         #Pedimos que nos ingrese el criterio y valor para buscar el proyecto a eliminar
@@ -237,88 +246,136 @@ class ProyectoManager:
         if not self.lista_proyectos:
             print("No hay proyectos para listar.")
             return
+        print("\n\t\t\tLista de Proyectos")
+       
+        print("\t"+"-"*42+"\t")
+        print("\t       ID. Nombre Proyecto")
         for i, proyecto in enumerate(self.lista_proyectos, start=1):
-            print(f"{i}. {proyecto.nombre}")
+            print(f"\t\t{proyecto.id}. {proyecto.nombre}")
+        print("\t"+"-"*42+"\t")
+
+    def buscar_proyecto_filtro(self, criterio, valor):
+        proyectos_encontrados = []
+        for proyecto in self.lista_proyectos:
+            try:
+                if getattr(proyecto, criterio) == valor:
+                    proyectos_encontrados.append(proyecto)
+            except AttributeError:
+                pass
+        if not proyectos_encontrados:
+            print(f"\nError: El criterio ' {criterio} ' no existe")
+            print("Los criterios existentes son: \n[id, nombre, descripción, fecha inicio, fecha vencimiento, estado, empresa, gerente, equipo]")
+        return proyectos_encontrados
+    
+    def filtrar_todas_tareas_por_estado(self):
+        tareas_filtradas = []
+        estado_tarea = input("\nIngrese el estado de las tareas: ")
+        for proyecto in self.lista_proyectos:
+            for tarea in proyecto.tareas.recorrer():
+                if estado_tarea == tarea.estado:
+                    tareas_filtradas.append(tarea)
+        print(f"\n\t     Todas las tareas con estado: {estado_tarea}")
+        print("\t"+"-"*51)
+        for tarea in tareas_filtradas:
+            print(f"\t      ID:{tarea.id}, Nombre: {tarea.nombre}, \n\t      Fecha inicio:{tarea.fecha_inicio.date()}, \n\t      Fecha vencimiento: {tarea.fecha_vencimiento.date()}\n")
+
+
     #Funciones subMenu: menu_tareas
-    def agregar_tarea(self, proyecto):
-        id = input("Ingrese el ID de la tarea: ")
-        nombre = input("Ingrese el nombre de la tarea: ")
-        empresa_cliente = input("Ingrese la empresa cliente de la tarea: ")
-        descripcion = input("Ingrese la descripción de la tarea: ")
-        fecha_inicio = input("Ingrese la fecha de inicio de la tarea (aaaa-mm-dd): ")
-        fecha_vencimiento = input("Ingrese la fecha de vencimiento de la tarea (aaaa-mm-dd): ")
-        estado = input("Ingrese el estado actual de la tarea: ")
-        porcentaje = input("Ingrese el porcentaje de la tarea: ")
+    def agregar_nuevatarea(self, proyecto):
+        id = input("\n       Ingrese el ID de la tarea: ")
+        nombre = input("       Ingrese el nombre de la tarea: ")
+        empresa_cliente = input("       Ingrese la empresa cliente de la tarea: ")
+        descripcion = input("       Ingrese la descripción de la tarea: ")
+        fecha_inicio = input("       Ingrese la fecha de inicio de la tarea (aaaa-mm-dd): ")
+        fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+        fecha_vencimiento = input("       Ingrese la fecha de vencimiento de la tarea (aaaa-mm-dd): ")
+        fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%Y-%m-%d")
+        estado = input("       Ingrese el estado actual de la tarea: ")
+        porcentaje = input("       Ingrese el porcentaje de la tarea: ")
 
         nueva_tarea = Tarea(id, nombre, empresa_cliente, descripcion, fecha_inicio, fecha_vencimiento, estado, porcentaje)
-        proyecto.tareas.append(nueva_tarea)
-        print("\nTarea agregada con éxito.")
+        proyecto.tareas.agregar(nueva_tarea)
+        print("\n       Tarea agregada con éxito.")
 
     def insertar_tarea(self, proyecto):
-        id = input("Ingrese el ID de la tarea: ")
-        nombre = input("Ingrese el nombre de la tarea: ")
-        empresa_cliente = input("Ingrese la empresa cliente de la tarea: ")
-        descripcion = input("Ingrese la descripción de la tarea: ")
-        fecha_inicio = input("Ingrese la fecha de inicio de la tarea (aaaa-mm-dd): ")
-        fecha_vencimiento = input("Ingrese la fecha de vencimiento de la tarea (aaaa-mm-dd): ")
-        estado = input("Ingrese el estado actual de la tarea: ")
-        porcentaje = input("Ingrese el porcentaje de la tarea: ")
-        posicion = int(input("Ingrese la posición donde insertar la tarea: "))
+        id = input("\n       Ingrese el ID de la tarea: ")
+        nombre = input("       Ingrese el nombre de la tarea: ")
+        empresa_cliente = input("       Ingrese la empresa cliente de la tarea: ")
+        descripcion = input("       Ingrese la descripción de la tarea: ")
+        fecha_inicio = input("       Ingrese la fecha de inicio de la tarea (aaaa-mm-dd): ")
+        fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+        fecha_vencimiento = input("       Ingrese la fecha de vencimiento de la tarea (aaaa-mm-dd): ")
+        fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%Y-%m-%d")
+        estado = input("       Ingrese el estado actual de la tarea: ")
+        porcentaje = input("       Ingrese el porcentaje de la tarea: ")
+        posicion = int(input("       Ingrese la posición donde insertar la tarea: "))
 
         nueva_tarea = Tarea(id, nombre, empresa_cliente, descripcion, fecha_inicio, fecha_vencimiento, estado, porcentaje)
-        proyecto.tareas.insert(posicion, nueva_tarea)
-        print("\nTarea insertada con éxito.")
+        proyecto.tareas.insertar(posicion, nueva_tarea)
+        print("\n       Tarea insertada con éxito.")
+
+    def buscar_tarea(self, proyecto, criterio, valor):
+        encontrado = False
+        for tarea in proyecto.tareas.recorrer():
+            try:
+                if getattr(tarea, criterio) == valor:
+                    return tarea
+                encontrado = True
+            except AttributeError:
+                pass
+        if not encontrado:
+            print(f"\n       Error: El criterio '{criterio} 'o existe")
+            print("       Los criterios existentes son: \n[id, nombre, descripción, fecha_inicio, fecha_vencimiento, estado, empresa_cliente, porcentaje]")
+        return None
+
+    def consultar_tarea(self, proyecto):
+        # Pedimos que nos ingrese el criterio y valor para buscar la tarea a consultar
+        criterio = input("\n       Introduzca el criterio de búsqueda: ")
+        valor = input("       Introduzca el valor del criterio: ")
+        tarea = self.buscar_tarea(proyecto, criterio.lower(), valor)
+        if tarea:
+            print("\t"+"-"*42+"\t")
+            print(f"\tID: {tarea.id}")
+            print(f"\tNombre: {tarea.nombre}")
+            print(f"\tDescripción: {tarea.descripcion}")
+            print(f"\tFecha de Inicio: {tarea.fecha_inicio.date()}")
+            print(f"\tFecha de Vencimiento: {tarea.fecha_vencimiento.date()}")
+            print(f"\tEstado: {tarea.estado}")
+            print(f"\tEmpresa cliente: {tarea.empresa_cliente}")
+            print(f"\tPorcentaje: {tarea.porcentaje}")
+            print("\t"+"-"*42+"\t")
+        else:
+            print("\n\tTarea no encontrada")
+
 
     def eliminar_tarea(self, proyecto):
-        id = input("Ingrese el ID de la tarea a eliminar: ")
-        for tarea in proyecto.tareas:
+        id = input("       Ingrese el ID de la tarea a eliminar: ")
+        for tarea in proyecto.tareas.recorrer():
             if tarea.id == id:
-                proyecto.tareas.remove(tarea)
-                print("\nTarea eliminada con éxito.")
+                proyecto.tareas.eliminar(tarea)
+                print("\n       Tarea eliminada con éxito.")
                 return
-        print("\nTarea no encontrada.")
+        print("\n       Tarea no encontrada.")
 
-    def buscar_tarea(self, proyecto):
-        criterio = input("Ingrese el criterio de búsqueda (ID, nombre, empresa cliente, etc.): ")
-        valor = input("Ingrese el valor del criterio: ")
-        for tarea in proyecto.tareas:
-            if getattr(tarea, criterio) == valor:
-                print("\nTarea encontrada:")
-                print(f"ID: {tarea.id}")
-                print(f"Nombre: {tarea.nombre}")
-                print(f"Empresa cliente: {tarea.empresa_cliente}")
-                print(f"Descripción: {tarea.descripcion}")
-                print(f"Fecha de inicio: {tarea.fecha_inicio.date()}")
-                print(f"Fecha de vencimiento: {tarea.fecha_vencimiento.date()}")
-                print(f"Estado: {tarea.estado}")
-                print(f"Porcentaje: {tarea.porcentaje}")
-                return
-        print("\nTarea no encontrada.")
 
     def actualizar_tarea(self, proyecto):
-        id = input("Ingrese el ID de la tarea a actualizar: ")
-        for tarea in proyecto.tareas:
-            if tarea.id == id:
-                tarea.nombre = input("Ingrese el nuevo nombre de la tarea: ")
-                tarea.empresa_cliente = input("Ingrese la nueva empresa cliente de la tarea: ")
-                tarea.descripcion = input("Ingrese la nueva descripción de la tarea: ")
-                tarea.fecha_inicio = input("Ingrese la nueva fecha de inicio de la tarea (aaaa-mm-dd): ")
-                tarea.fecha_vencimiento = input("Ingrese la nueva fecha de vencimiento de la tarea (aaaa-mm-dd): ")
-                tarea.estado = input("Ingrese el nuevo estado actual de la tarea: ")
-                tarea.porcentaje = input("Ingrese el nuevo porcentaje de la tarea: ")
-                print("\nTarea actualizada con éxito.")
-                return
-        print("\nTarea no encontrada.")
-
-    def mostrar_tareas(self, proyecto):
-        if proyecto.tareas:
-            print("Tareas del proyecto:")
-            for i, tarea in enumerate(proyecto.tareas, start=1):
-                print(f"{i}. {tarea.nombre}")
-                for subtarea in tarea.subtareas:
-                    print(f"  - {subtarea.nombre}")
+        criterio = input("\n       Introduzca el criterio de búsqueda: ")
+        valor = input("       Introduzca el valor del criterio: ")
+        tarea_encontrada = self.buscar_tarea(proyecto, criterio, valor)
+        if tarea_encontrada:
+            print("\n       Tarea encontrada. Ingrese los nuevos valores:")
+            tarea_encontrada.nombre = input("       Nombre: ")
+            tarea_encontrada.empresa_cliente = input("       Empresa cliente: ")
+            tarea_encontrada.descripcion = input("       Descripción: ")
+            fecha_inicio = input("       Fecha de inicio (aaaa-mm-dd): ")
+            tarea_encontrada.fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+            fecha_vencimiento = input("       Fecha de vencimiento (aaaa-mm-dd): ")
+            tarea_encontrada.fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%Y-%m-%d")
+            tarea_encontrada.estado = input("       Estado actual: ")
+            tarea_encontrada.porcentaje = input("       Porcentaje: ")
+            print("\n       Tarea actualizada con éxito.")
         else:
-            print("No hay tareas en el proyecto")
+            print("\n       Tarea no encontrada.")
 
         #Funciones del menu: "menu_tareas_prioritarias"
     def agregar_tarea_prioritaria(self, proyecto):
@@ -369,63 +426,98 @@ class ProyectoManager:
 
     def mostrar_tareas(self, tareas):
         if tareas:
-            """print(f"\nTareas con estado {tarea.estado}:")"""
             for tarea in tareas:
-                print(f"\nID: {tarea.id}, Nombre: {tarea.nombre}, \n   Descripción: {tarea.descripcion}, "
-                    f"\n   Estado: {tarea.estado}, \n   Fecha de Inicio: {tarea.fecha_inicio}, "
-                    f"\n   Fecha de Vencimiento: {tarea.fecha_vencimiento}")
-                """if hasattr(tarea, "subtareas"):
-                    for subtarea in tarea.subtareas:
-                        print(f"         - Subtarea: {subtarea.nombre}, \n           Descripción: {subtarea.descripcion}, "
-                            f"\n           Estado: {subtarea.estado}")"""
+                print(f"       ID: {tarea.id}, Nombre: {tarea.nombre}, \n          Descripción: {tarea.descripcion}, "
+                    f"\n          Estado: {tarea.estado}, \n          Fecha de Inicio: {tarea.fecha_inicio.date()}, "
+                    f"\n          Fecha de Vencimiento: {tarea.fecha_vencimiento.date()}")
         else:
             print(f"\nNo se encontraron tareas con estado ")
     
+    def ordenar_tareas_por_fecha_inicio(self, proyecto):
+        tareas_ordenadas = []
+        for tarea in proyecto.tareas.recorrer():
+            tareas_ordenadas.append(tarea)
+        tareas_ordenadas.sort(key=lambda x: x.fecha_inicio)
+        for tarea in tareas_ordenadas:
+            print(f"  {tarea.nombre} - {tarea.fecha_inicio.date()}")
+            for subtarea in tarea.subtareas:
+                print(f"    {subtarea.nombre} - {subtarea.estado}")
+
     def filtrar_tareas_por_fecha_inicio(self, fecha_inicio_desde, fecha_inicio_hasta):
-        tareas_encontradas = ListaEntrelazada()
-        for proyecto in self.lista_proyectos:
-            for tarea in proyecto.tareas.recorrer():
-                if fecha_inicio_desde <= tarea.fecha_inicio <= fecha_inicio_hasta:      #arreglar para mostrar en ambos caso no solo estado
-                    tareas_encontradas.agregar(tarea)
-                """for subtarea in tarea.subtareas.recorrer():
-                    if fecha_inicio_desde <= subtarea.fecha_inicio <= fecha_inicio_hasta:
-                        tareas_encontradas.agregar(subtarea)"""
-        self.mostrar_tareas(tareas_encontradas.recorrer())
+        tareas_encontradas = [tarea for proyecto in self.lista_proyectos for tarea in proyecto.tareas.recorrer() 
+                            if fecha_inicio_desde <= tarea.fecha_inicio <= fecha_inicio_hasta]
+        tareas_encontradas.sort(key=lambda x: x.fecha_inicio)
+        print(f"\n\t\t\t  Filtrar tareas entre \n\t\t\t{fecha_inicio_desde.date()} y {fecha_inicio_hasta.date()}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
 
     def filtrar_tareas_por_fecha_vencimiento(self, fecha_vencimiento_desde, fecha_vencimiento_hasta):
-        tareas_encontradas = ListaEntrelazada()
-        for proyecto in self.lista_proyectos.recorrer():
-            for tarea in proyecto.tareas.recorrer():
-                if fecha_vencimiento_desde <= tarea.fecha_vencimiento <= fecha_vencimiento_hasta:       #arreglar
-                    tareas_encontradas.agregar(tarea)
-                for subtarea in tarea.subtareas.recorrer():
-                    if fecha_vencimiento_desde <= subtarea.fecha_vencimiento <= fecha_vencimiento_hasta:
-                        tareas_encontradas.agregar(subtarea)
-        self.mostrar_tareas(tareas_encontradas.recorrer())
+        tareas_encontradas = [tarea for proyecto in self.lista_proyectos for tarea in proyecto.tareas.recorrer() 
+                            if fecha_vencimiento_desde <= tarea.fecha_vencimiento <= fecha_vencimiento_hasta]
+        tareas_encontradas.sort(key=lambda x: x.fecha_vencimiento)
+        print(f"\n\t\t\t  Filtrar tareas entre \n\t\t\t{fecha_vencimiento_desde.date()} y {fecha_vencimiento_hasta.date()}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
 
     def filtrar_tareas_por_fecha_inicio_antes(self, fecha_inicio):
-        tareas_encontradas = ListaEntrelazada()
-        for proyecto in self.lista_proyectos.recorrer():
-            for tarea in proyecto.tareas.recorrer():
-                if tarea.fecha_inicio < fecha_inicio:      #arreglar
-                    tareas_encontradas.agregar(tarea)
-                for subtarea in tarea.subtareas.recorrer():
-                    if subtarea.fecha_inicio < fecha_inicio:
-                        tareas_encontradas.agregar(subtarea)
-        self.mostrar_tareas(tareas_encontradas.recorrer())
+        tareas_encontradas = [tarea for proyecto in self.lista_proyectos for tarea in proyecto.tareas.recorrer() 
+                            if tarea.fecha_inicio < fecha_inicio]
+        tareas_encontradas.sort(key=lambda x: x.fecha_inicio)
+        print(f"\n\t\t  Filtrar tareas antes del {fecha_inicio.date()}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
 
     def filtrar_tareas_por_fecha_inicio_despues(self, fecha_inicio):
-        tareas_encontradas = ListaEntrelazada()
-        for proyecto in self.lista_proyectos.recorrer():
-            for tarea in proyecto.tareas.recorrer():  #arreglar
-                if tarea.fecha_inicio > fecha_inicio:
-                    tareas_encontradas.agregar(tarea)
-                for subtarea in tarea.subtareas.recorrer():
-                    if subtarea.fecha_inicio > fecha_inicio:
-                        tareas_encontradas.agregar(subtarea)
-        self.mostrar_tareas(tareas_encontradas.recorrer())
+        tareas_encontradas = [tarea for proyecto in self.lista_proyectos for tarea in proyecto.tareas.recorrer() 
+                            if tarea.fecha_inicio > fecha_inicio]
+        tareas_encontradas.sort(key=lambda x: x.fecha_inicio)
+        print(f"\n\t\t  Filtrar tareas despues del {fecha_inicio.date()}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
+
+    #SOLO DE LAS TAREAS DE UN PROYECTO
+    def filtrar_tareas_por_fecha_inicio_proy(self, proyecto, fecha_inicio_desde, fecha_inicio_hasta):
+        tareas_encontradas = [tarea for tarea in proyecto.tareas.recorrer() 
+                            if fecha_inicio_desde <= tarea.fecha_inicio <= fecha_inicio_hasta]
+        tareas_encontradas.sort(key=lambda x: x.fecha_inicio)
+        print(f"\n\t\t\t  Filtrar tareas entre \n\t\t\t{fecha_inicio_desde.date()} y {fecha_inicio_hasta.date()} \n\t\t    para el proyecto {proyecto.nombre}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
+
+    def filtrar_tareas_por_fecha_vencimiento_proy(self, proyecto, fecha_vencimiento_desde, fecha_vencimiento_hasta):
+        tareas_encontradas = [tarea for tarea in proyecto.tareas.recorrer() 
+                            if fecha_vencimiento_desde <= tarea.fecha_vencimiento <= fecha_vencimiento_hasta]
+        tareas_encontradas.sort(key=lambda x: x.fecha_vencimiento)
+        print(f"\n\t\t\t  Filtrar tareas entre \n\t\t\t{fecha_vencimiento_desde.date()} y {fecha_vencimiento_hasta.date()} \n\t\t    para el proyecto {proyecto.nombre}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
+
+    def filtrar_tareas_por_fecha_inicio_antes_proy(self, proyecto, fecha_inicio):
+        tareas_encontradas = [tarea for tarea in proyecto.tareas.recorrer() 
+                            if tarea.fecha_inicio < fecha_inicio]
+        tareas_encontradas.sort(key=lambda x: x.fecha_inicio)
+        print(f"\n\t\t  Filtrar tareas antes del {fecha_inicio.date()} \n\t\t    para el proyecto {proyecto.nombre}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
+
+    def filtrar_tareas_por_fecha_inicio_despues_proy(self, proyecto, fecha_inicio):
+        tareas_encontradas = [tarea for tarea in proyecto.tareas.recorrer() 
+                            if tarea.fecha_inicio > fecha_inicio]
+        tareas_encontradas.sort(key=lambda x: x.fecha_inicio)
+        print(f"\n\t\t  Filtrar tareas despues del {fecha_inicio.date()} \n\t\t    para el proyecto {proyecto.nombre}")
+        print("          "+"-"*50)
+        self.mostrar_tareas(tareas_encontradas)
+        print("          "+"-"*50)
 
 
+    
 #HASTA AQUI VER SI SE PUEDE METER A CLASE PARA NO SER TANTO CODIGO
 
     def menu(self):
@@ -444,7 +536,7 @@ class ProyectoManager:
             print("  9. Filtrar tareas por fechas")
             print("  10. Salir")
             print("-"*60)
-            n = int(input("Seleccione una opción (1-9): "))
+            n = int(input("Seleccione una opción (1-10): "))
 
             if n == 1:
                 self.crear_proyecto()
@@ -453,7 +545,7 @@ class ProyectoManager:
                 self.modificar_proyecto()
 
             elif n == 3:
-                self.consultar()
+                self.consultar_proyecto()
 
             elif n == 4:
                 self.eliminar()
@@ -462,13 +554,18 @@ class ProyectoManager:
                 self.listar_nombres_proyectos()
             
             elif n == 6:
-                return None
+                criterio = input("\nIntroduzca el criterio de búsqueda: ")
+                valor = input("Introduzca el valor del criterio: ")
+                print(f"\n\tLista de Proyecto por {criterio}: {valor}")
+                print("-"*60)
+                proyectos = self.buscar_proyecto_filtro(criterio, valor)
+                self.consultar(proyectos)
 
             elif n == 7:
                 t = True
                 self.listar_nombres_proyectos()
                 f = input("\nSeleccione el proyecto por id o nombre: ")
-                proyecto_selec = self.buscar_proyecto("id",f)
+                proyecto_selec = self.buscar_proyecto("id",f) #hacer que se pueda hacer por nombre
                 while t:
                     print(f"\n          Gestión de Tareas del Proyecto: {proyecto_selec.nombre}")
                     print("     "+"-"*55)
@@ -480,22 +577,46 @@ class ProyectoManager:
                     print("       6. Actualizar informacion tarea")
                     print("       7. Tareas Prioritarias")
                     print("       8. Tareas Por Terminar")
-                    print("       9. Consultar todas las tarear por estado")
-                    print("       10. Salir al menu principal")
+                    print("       9. Filtrar tareas por fechas")
+                    print("       10. Consultar todas las tarear por estado") #tal vez se queda
+                    print("       11. Salir al menu principal")
 
-                    op = int(input("       Seleccione una opción (1-9): "))
+                    op = int(input("       Seleccione una opción (1-10): "))
+                    print("")
                     if op == 1:
-                        return 
+                        self.ordenar_tareas_por_fecha_inicio(proyecto_selec)
                     elif op == 2:
-                        return
+                        self.agregar_nuevatarea(proyecto_selec)
+                        print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
+                        print("     "+"-"*55)
+                        tareas = proyecto_selec.tareas.recorrer()
+                        self.mostrar_tareas(tareas)
+                        print("     "+"-"*55)
                     elif op == 3:
-                        return
+                        self.insertar_tarea(proyecto_selec)
+                        print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
+                        print("     "+"-"*55)
+                        tareas = proyecto_selec.tareas.recorrer()
+                        self.mostrar_tareas(tareas)
+                        print("     "+"-"*55)
+
                     elif op == 4:
-                        return
+                        self.eliminar_tarea(proyecto_selec)
+                        print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
+                        print("     "+"-"*55)
+                        tareas = proyecto_selec.tareas.recorrer()
+                        self.mostrar_tareas(tareas)
+                        print("     "+"-"*55)
                     elif op == 5:
-                        return
+                        self.consultar_tarea(proyecto_selec)
                     elif op == 6:
-                        return
+                        self.actualizar_tarea(proyecto_selec)
+                        print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
+                        print("     "+"-"*55)
+                        tareas = proyecto_selec.tareas.recorrer()
+                        self.mostrar_tareas(tareas)
+                        print("     "+"-"*55)
+
                     elif op == 7:
                         cc = True
                         while cc:
@@ -546,50 +667,85 @@ class ProyectoManager:
                                 cf = False
                             else:
                                 print("\n          Opción no válida. Por favor, intente de nuevo.")
+                    
                     elif op == 9:
+                        print(f"\n           Filtrar tareas del {proyecto_selec.nombre} por fechas")
+                        print("     "+"-"*55)
+                        print("       1. Filtrar tareas por fecha de inicio")
+                        print("       2. Filtrar tareas por fecha de vencimiento")
+                        print("       3. Filtrar tareas por fecha de inicio antes de")
+                        print("       4. Filtrar tareas por fecha de inicio después de")
+                        print("       5. Salir al menu principal")
+                        print("     "+"-"*55)
+
+                        op = int(input("       Seleccione una opción (1-5): "))
+                        if op == 1:
+                            fecha_inicio_desde = datetime.strptime(input("          Ingrese la fecha de inicio desde (yyyy-mm-dd): "), "%Y-%m-%d")
+                            fecha_inicio_hasta = datetime.strptime(input("          Ingrese la fecha de inicio hasta (yyyy-mm-dd): "), "%Y-%m-%d")
+                            self.filtrar_tareas_por_fecha_inicio_proy(proyecto_selec, fecha_inicio_desde, fecha_inicio_hasta)
+                        elif op == 2:
+                            fecha_vencimiento_desde = datetime.strptime(input("          Ingrese la fecha de vencimiento desde (yyyy-mm-dd): "), "%Y-%m-%d")
+                            fecha_vencimiento_hasta = datetime.strptime(input("          Ingrese la fecha de vencimiento hasta (yyyy-mm-dd): "), "%Y-%m-%d")
+                            self.filtrar_tareas_por_fecha_vencimiento_proy(proyecto_selec, fecha_vencimiento_desde, fecha_vencimiento_hasta)
+                        elif op == 3:
+                            fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio antes de (yyyy-mm-dd): "), "%Y-%m-%d")
+                            self.filtrar_tareas_por_fecha_inicio_antes_proy(proyecto_selec, fecha_inicio)
+                        elif op == 4:
+                            fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio después de (yyyy-mm-dd): "), "%Y-%m-%d")
+                            self.filtrar_tareas_por_fecha_inicio_despues_proy(proyecto_selec, fecha_inicio)
+                        elif op == 5:
+                            print("\n          Saliendo del menu...")
+                        else:
+                            print("\n          Opción no válida. Por favor, intente de nuevo.")
+
+                    elif op == 10:
                         estado = input("Ingrese el estado a consultar en las tareas")
                         print("")
                         self.consultar_tareas_por_estado(f, estado)
-                    
-                    elif op == 10:
+
+                    elif op == 11:
                         print("\n       Saliendo del menu...")
                         t = False
                     else:
                         print("\n       Opción no válida. Por favor, intente de nuevo.")
                     
             elif n == 8:
-                return
+                self.filtrar_todas_tareas_por_estado()
             elif n == 9:
                 
-                print("\n          Filtrar tareas por fechas")
+                print("\n                   Filtrar tareas por fechas")
                 print("     "+"-"*55)
                 print("       1. Filtrar tareas por fecha de inicio")
                 print("       2. Filtrar tareas por fecha de vencimiento")
                 print("       3. Filtrar tareas por fecha de inicio antes de")
                 print("       4. Filtrar tareas por fecha de inicio después de")
                 print("       5. Salir al menu principal")
+                print("     "+"-"*55)
 
                 op = int(input("       Seleccione una opción (1-5): "))
                 if op == 1:
-                    fecha_inicio_desde = datetime.strptime(input("Ingrese la fecha de inicio desde (yyyy-mm-dd): "), "%Y-%m-%d")
-                    fecha_inicio_hasta = datetime.strptime(input("Ingrese la fecha de inicio hasta (yyyy-mm-dd): "), "%Y-%m-%d")
+                    fecha_inicio_desde = datetime.strptime(input("          Ingrese la fecha de inicio desde (yyyy-mm-dd): "), "%Y-%m-%d")
+                    fecha_inicio_hasta = datetime.strptime(input("          Ingrese la fecha de inicio hasta (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_inicio(fecha_inicio_desde, fecha_inicio_hasta)
                 elif op == 2:
-                    fecha_vencimiento_desde = datetime.strptime(input("Ingrese la fecha de vencimiento desde (yyyy-mm-dd): "), "%Y-%m-%d")
-                    fecha_vencimiento_hasta = datetime.strptime(input("Ingrese la fecha de vencimiento hasta (yyyy-mm-dd): "), "%Y-%m-%d")
+                    fecha_vencimiento_desde = datetime.strptime(input("          Ingrese la fecha de vencimiento desde (yyyy-mm-dd): "), "%Y-%m-%d")
+                    fecha_vencimiento_hasta = datetime.strptime(input("          Ingrese la fecha de vencimiento hasta (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_vencimiento(fecha_vencimiento_desde, fecha_vencimiento_hasta)
                 elif op == 3:
-                    fecha_inicio = datetime.strptime(input("Ingrese la fecha de inicio antes de (yyyy-mm-dd): "), "%Y-%m-%d")
+                    fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio antes de (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_inicio_antes(fecha_inicio)
                 elif op == 4:
-                    fecha_inicio = datetime.strptime(input("Ingrese la fecha de inicio después de (yyyy-mm-dd): "), "%Y-%m-%d")
+                    fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio después de (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_inicio_despues(fecha_inicio)
                 elif op == 5:
                     print("\n          Saliendo del menu...")
                 else:
                     print("\n          Opción no válida. Por favor, intente de nuevo.")
 
-            elif n == 10:
+            elif n ==10:
+                return
+
+            elif n == 11:
 
                 print("\nSaliendo del programa...")
                 break

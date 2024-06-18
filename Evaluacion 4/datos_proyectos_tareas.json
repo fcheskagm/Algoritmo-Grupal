@@ -18,7 +18,7 @@
                     "descripcion": "Diseñar la interfaz de la aplicación",
                     "fecha_inicio": "2024-01-01",
                     "fecha_vencimiento": "2024-01-15",
-                    "estado": "En progreso",
+                    "estado": "Completada",
                     "porcentaje": 40,
                     "subtareas": [1, 2]
                   },
@@ -53,7 +53,7 @@
                   "descripcion": "Analizar los requisitos del sistema",
                   "fecha_inicio": "2024-04-01",
                   "fecha_vencimiento": "2024-04-15",
-                  "estado": "En progreso",
+                  "estado": "Completada",
                   "porcentaje": 30,
                   "subtareas": [1, 2]
                 },
