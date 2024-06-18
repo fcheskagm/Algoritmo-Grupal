@@ -4,22 +4,34 @@
       "1": [
         {
           "id": 1,
-          "nombre": "Subtarea 1",
-          "descripcion": "Descripción de la subtarea 1",
+          "nombre": "Diseñar interfaz de usuario",
+          "descripcion": "Diseñar la interfaz de usuario de la aplicación móvil",
           "estado": "Completada"
         },
         {
           "id": 2,
-          "nombre": "Subtarea 2",
-          "descripcion": "Descripción de la subtarea 2",
+          "nombre": "Desarrollar prototipo",
+          "descripcion": "Desarrollar un prototipo de la aplicación móvil",
           "estado": "Pendiente"
         }
       ],
       "2": [
         {
+          "id": 1,
+          "nombre": "Implementar lógica de negocio",
+          "descripcion": "Implementar la lógica de negocio de la aplicación móvil",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Realizar pruebas unitarias",
+          "descripcion": "Realizar pruebas unitarias de la aplicación móvil",
+          "estado": "Pendiente"
+        },
+        {
           "id": 3,
-          "nombre": "Subtarea 3",
-          "descripcion": "Descripción de la subtarea 3",
+          "nombre": "Documentar código",
+          "descripcion": "Documentar el código de la aplicación móvil",
           "estado": "Completada"
         }
       ]
@@ -29,18 +41,246 @@
     "tareas": {
       "1": [
         {
+          "id": 1,
+          "nombre": "Análisis de requisitos",
+          "descripcion": "Analizar los requisitos del sistema de gestión",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Diseñar base de datos",
+          "descripcion": "Diseñar la base de datos del sistema de gestión",
+          "estado": "Pendiente"
+        }
+      ],
+      "2": [
+        {
+          "id": 1,
+          "nombre": "Desarrollar módulo de autenticación",
+          "descripcion": "Desarrollar el módulo de autenticación del sistema de gestión",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Configurar sistema de gestión",
+          "descripcion": "Configurar el sistema de gestión",
+          "estado": "Pendiente"
+        }
+      ]
+    }
+  },
+  "3": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Diseñar sitio web",
+          "descripcion": "Diseñar el sitio web de comercio electrónico",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Desarrollar funcionalidad de pago",
+          "descripcion": "Desarrollar la funcionalidad de pago del sitio web de comercio electrónico",
+          "estado": "Pendiente"
+        },
+        {
+          "id": 3,
+          "nombre": "Realizar pruebas de usabilidad",
+          "descripcion": "Realizar pruebas de usabilidad del sitio web de comercio electrónico",
+          "estado": "Completada"
+        },
+        {
           "id": 4,
-          "nombre": "Subtarea 4",
-          "descripcion": "Descripción de la subtarea 4",
+          "nombre": "Optimizar rendimiento",
+          "descripcion": "Optimizar el rendimiento del sitio web de comercio electrónico",
+          "estado": "Pendiente"
+        }
+      ],
+      "2": [
+        {
+          "id": 1,
+          "nombre": "Desarrollar funcionalidad de búsqueda",
+          "descripcion": "Desarrollar la funcionalidad de búsqueda del sitio web de comercio electrónico",
+          "estado": "Completada"
+        }
+      ]
+    }
+  },
+  "4": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Análisis de vulnerabilidades",
+          "descripcion": "Analizar las vulnerabilidades del sistema de seguridad",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Implementar medidas de seguridad",
+          "descripcion": "Implementar medidas de seguridad del sistema de seguridad",
+          "estado": "Pendiente"
+        }
+      ],
+      "2": [
+        {
+          "id": 1,
+          "nombre": "Configurar firewall",
+          "descripcion": "Configurar el firewall del sistema de seguridad",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Realizar pruebas de penetración",
+          "descripcion": "Realizar pruebas de penetración del sistema de seguridad",
+          "estado": "Pendiente"
+        },
+        {
+          "id": 3,
+          "nombre": "Documentar configuración",
+          "descripcion": "Documentar la configuración del sistema de seguridad",
+          "estado": "Completada"
+        }
+      ]
+    }
+  },
+  "5": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Diseñar interfaz de usuario",
+          "descripcion": "Diseñar la interfaz de usuario de la aplicación de escritorio",
           "estado": "Completada"
         }
       ],
       "2": [
         {
-          "id": 5,
-          "nombre": "Subtarea 5",
-          "descripcion": "Descripción de la subtarea 5",
+          "id": 1,
+          "nombre": "Desarrollar funcionalidad de edición",
+          "descripcion": "Desarrollar la funcionalidad de edición de la aplicación de escritorio",
           "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Realizar pruebas de compatibilidad",
+          "descripcion": "Realizar pruebas de compatibilidad de la aplicación de escritorio",
+          "estado": "Pendiente"
+        }
+      ]
+    }
+  },
+  "6": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Análisis de requisitos",
+          "descripcion": "Analizar los requisitos del sistema de gestión de proyectos",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Diseñar base de datos",
+          "descripcion": "Diseñar la base de datos del sistema de gestión de proyectos",
+          "estado": "Pendiente"
+        },
+        {
+          "id": 3,
+          "nombre": "Desarrollar módulo de reporting",
+          "descripcion": "Desarrollar el módulo de reporting del sistema de gestión de proyectos",
+          "estado": "Completada"
+        }
+      ],
+      "2": [
+        {
+          "id": 1,
+          "nombre": "Desarrollar módulo de gestión de tareas",
+          "descripcion": "Desarrollar el módulo de gestión de tareas del sistema de gestión de proyectos",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Realizar pruebas de integración",
+          "descripcion": "Realizar pruebas de integración del sistema de gestión de proyectos",
+          "estado": "Pendiente"
+        }
+      ]
+    }
+  },
+  "7": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Diseñar sitio web",
+          "descripcion": "Diseñar el sitio web de la empresa",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Desarrollar funcionalidad de blog",
+          "descripcion": "Desarrollar la funcionalidad de blog del sitio web de la empresa",
+          "estado": "Pendiente"
+        }
+      ],
+      "2": [
+        {
+          "id": 1,
+          "nombre": "Desarrollar funcionalidad de contacto",
+          "descripcion": "Desarrollar la funcionalidad de contacto del sitio web de la empresa",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre":"Realizar pruebas de compatibilidad",
+          "descripcion": "Realizar pruebas de compatibilidad de la aplicación de escritorio",
+          "estado": "En progreso"
+        }
+      ]
+    }
+  },
+  "8": {
+    "tareas": {
+      "1": [
+        {
+          "id": 1,
+          "nombre": "Crear wireframe",
+          "descripcion": "Crear wireframe del sitio web",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Diseñar layout",
+          "descripcion": "Diseñar layout del sitio web",
+          "estado": "Pendiente"
+        }
+      ],
+      "2": [
+        {
+          "id": 1,
+          "nombre": "Crear modelo de datos",
+          "descripcion": "Crear modelo de datos para el blog",
+          "estado": "Completada"
+        },
+        {
+          "id": 2,
+          "nombre": "Desarrollar vista de blog",
+          "descripcion": "Desarrollar vista de blog del sitio web",
+          "estado": "Pendiente"
+        },
+        {
+          "id": 3,
+          "nombre": "Desarrollar controlador de blog",
+          "descripcion": "Desarrollar controlador de blog del sitio web",
+          "estado": "En progreso"
+        },
+        {
+          "id": 4,
+          "nombre": "Realizar pruebas de blog",
+          "descripcion": "Realizar pruebas de la funcionalidad de blog",
+          "estado": "Pendiente"
         }
       ]
     }
