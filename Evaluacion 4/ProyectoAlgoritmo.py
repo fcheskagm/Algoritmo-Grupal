@@ -66,6 +66,54 @@ class Configuracion:
         proyectos = self.cargar_datos_desde_json()
         self.cargar_subtareas_desde_json(proyectos)
         return proyectos 
+    
+    def guardar_datos(self, proyectos):
+        """
+        Guarda los datos de los proyectos en los archivos JSON.
+        """
+        datos_proyectos = []
+        for proyecto in proyectos:
+            datos_proyecto = {
+                "id": proyecto.id,
+                "nombre": proyecto.nombre,
+                "descripcion": proyecto.descripcion,
+                "fecha_inicio": proyecto.fecha_inicio.strftime("%Y-%m-%d"),
+                "fecha_vencimiento": proyecto.fecha_vencimiento.strftime("%Y-%m-%d"),
+                "estado": proyecto.estado,
+                "empresa": proyecto.empresa,
+                "gerente": proyecto.gerente,
+                "equipo": proyecto.equipo,
+                "tareas": [],
+                "subtareas": []
+            }
+            for tarea in proyecto.tareas.recorrer():
+                datos_tarea = {
+                    "id": tarea.id,
+                    "nombre": tarea.nombre,
+                    "empresa_cliente": tarea.empresa_cliente,
+                    "descripcion": tarea.descripcion,
+                    "fecha_inicio": tarea.fecha_inicio.strftime("%Y-%m-%d"),
+                    "fecha_vencimiento": tarea.fecha_vencimiento.strftime("%Y-%m-%d"),
+                    "estado": tarea.estado,
+                    "porcentaje": tarea.porcentaje,
+                    "subtareas": []
+                }
+                for subtarea in tarea.subtareas:
+                    datos_subtarea = {
+                        "id": subtarea.id,
+                        "nombre": subtarea.nombre,
+                        "descripcion": subtarea.descripcion,
+                        "estado": subtarea.estado
+                    }
+                    datos_tarea["subtareas"].append(datos_subtarea)
+                datos_proyecto["tareas"].append(datos_tarea)
+            datos_proyectos.append(datos_proyecto)
+
+        with open(self.ruta_datos, "w", encoding="utf-8") as archivo:
+            json.dump(datos_proyectos, archivo, ensure_ascii=False, indent=4)
+
+        with open(self.ruta_subtareas, "w", encoding="utf-8") as archivo:
+            json.dump(datos_proyectos, archivo, ensure_ascii=False, indent=4)
 
 class Proyecto:
     #Se declaran los atributos que conforman al proyecto
@@ -762,3 +810,6 @@ pross = pro.mostrar_datos()
 
 manager = ProyectoManager(pross)
 manager.menu()
+pross = manager.lista_proyectos
+
+pro.guardar_datos(pross)
