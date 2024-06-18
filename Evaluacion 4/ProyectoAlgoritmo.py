@@ -11,6 +11,7 @@ class Configuracion:
             self.datos = archivo.readlines()
             self.ruta_datos = self.datos[0].strip()
             self.ruta_subtareas = self.datos[1].strip()
+            self.ruta_datos_final = self.datos[2].strip()
 
     def cargar_datos_desde_json(self):
 
@@ -107,7 +108,7 @@ class Configuracion:
                 datos_proyecto["tareas"].append(datos_tarea)
             datos_proyectos.append(datos_proyecto)
 
-        with open(self.ruta_datos, "w", encoding="utf-8") as archivo:
+        with open(self.ruta_datos_final, "w", encoding="utf-8") as archivo:
             json.dump(datos_proyectos, archivo, ensure_ascii=False, indent=4)
 
 
@@ -731,7 +732,6 @@ class ProyectoManager:
                     proyecto_selec = self.buscar_proyecto("nombre",s)
                 else:
                     print("\n       Opción no válida. Por favor, intente de nuevo.")
-                    return
                 while t:
                     print(f"\n          Gestión de Tareas del Proyecto: {proyecto_selec.nombre}")
                     print("     "+"-"*55)
@@ -905,6 +905,7 @@ class ProyectoManager:
                     self.filtrar_tareas_por_fecha_inicio_despues(fecha_inicio)
                 elif op == "5":
                     print("\n          Saliendo del menu...")
+                    
                 else:
                     print("\n          Opción no válida. Por favor, intente de nuevo.")
 
@@ -930,4 +931,4 @@ manager = ProyectoManager(pross)
 manager.menu()
 pross = manager.lista_proyectos
 
-#pro.guardar_datos(pross)
+pro.guardar_datos(pross)

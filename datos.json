@@ -1,0 +1,528 @@
+[
+    {
+        "id": "1",
+        "nombre": "Proyecto Alpha",
+        "descripcion": "Desarrollo de una aplicación móvil",
+        "fecha_inicio": "2024-01-01",
+        "fecha_vencimiento": "2024-03-31",
+        "estado": "En progreso",
+        "empresa": "TechCorp",
+        "gerente": "Juan Pérez",
+        "equipo": "Equipo de Desarrollo",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Diseño de la interfaz",
+                "empresa_cliente": "TechCorp",
+                "descripcion": "Diseñar la interfaz de la aplicación",
+                "fecha_inicio": "2024-01-01",
+                "fecha_vencimiento": "2024-01-15",
+                "estado": "Completada",
+                "porcentaje": 40,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Diseñar interfaz de usuario",
+                        "descripcion": "Diseñar la interfaz de usuario de la aplicación móvil",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Desarrollar prototipo",
+                        "descripcion": "Desarrollar un prototipo de la aplicación móvil",
+                        "estado": "Pendiente"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Desarrollo de la lógica",
+                "empresa_cliente": "TechCorp",
+                "descripcion": "Desarrollar la lógica de la aplicación",
+                "fecha_inicio": "2024-01-16",
+                "fecha_vencimiento": "2024-02-28",
+                "estado": "En progreso",
+                "porcentaje": 20,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Implementar lógica de negocio",
+                        "descripcion": "Implementar la lógica de negocio de la aplicación móvil",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Realizar pruebas unitarias",
+                        "descripcion": "Realizar pruebas unitarias de la aplicación móvil",
+                        "estado": "Pendiente"
+                    },
+                    {
+                        "id": "3",
+                        "nombre": "Documentar código",
+                        "descripcion": "Documentar el código de la aplicación móvil",
+                        "estado": "Completada"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "2",
+        "nombre": "Proyecto Beta",
+        "descripcion": "Implementación de un sistema de gestión",
+        "fecha_inicio": "2024-04-01",
+        "fecha_vencimiento": "2024-06-30",
+        "estado": "En progreso",
+        "empresa": "CorpSys",
+        "gerente": "María Rodríguez",
+        "equipo": "Equipo de Implementación",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Análisis de requisitos",
+                "empresa_cliente": "CorpSys",
+                "descripcion": "Analizar los requisitos del sistema",
+                "fecha_inicio": "2024-04-01",
+                "fecha_vencimiento": "2024-04-15",
+                "estado": "Completada",
+                "porcentaje": 30,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Análisis de requisitos",
+                        "descripcion": "Analizar los requisitos del sistema de gestión",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Diseñar base de datos",
+                        "descripcion": "Diseñar la base de datos del sistema de gestión",
+                        "estado": "Pendiente"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Configuración del sistema",
+                "empresa_cliente": "CorpSys",
+                "descripcion": "Configurar el sistema de gestión",
+                "fecha_inicio": "2024-04-16",
+                "fecha_vencimiento": "2024-05-31",
+                "estado": "En progreso",
+                "porcentaje": 25,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Desarrollar módulo de autenticación",
+                        "descripcion": "Desarrollar el módulo de autenticación del sistema de gestión",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Configurar sistema de gestión",
+                        "descripcion": "Configurar el sistema de gestión",
+                        "estado": "Pendiente"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "3",
+        "nombre": "Proyecto Gamma",
+        "descripcion": "Desarrollo de un sitio web",
+        "fecha_inicio": "2024-07-01",
+        "fecha_vencimiento": "2024-09-30",
+        "estado": "En progreso",
+        "empresa": "WebDev",
+        "gerente": "Pedro García",
+        "equipo": "Equipo de Desarrollo Web",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Diseño del sitio web",
+                "empresa_cliente": "WebDev",
+                "descripcion": "Diseñar el sitio web",
+                "fecha_inicio": "2024-07-01",
+                "fecha_vencimiento": "2024-07-15",
+                "estado": "En progreso",
+                "porcentaje": 35,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Diseñar sitio web",
+                        "descripcion": "Diseñar el sitio web de comercio electrónico",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Desarrollar funcionalidad de pago",
+                        "descripcion": "Desarrollar la funcionalidad de pago del sitio web de comercio electrónico",
+                        "estado": "Pendiente"
+                    },
+                    {
+                        "id": "3",
+                        "nombre": "Realizar pruebas de usabilidad",
+                        "descripcion": "Realizar pruebas de usabilidad del sitio web de comercio electrónico",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "4",
+                        "nombre": "Optimizar rendimiento",
+                        "descripcion": "Optimizar el rendimiento del sitio web de comercio electrónico",
+                        "estado": "Pendiente"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Desarrollo del sitio web",
+                "empresa_cliente": "WebDev",
+                "descripcion": "Desarrollar el sitio web",
+                "fecha_inicio": "2024-07-16",
+                "fecha_vencimiento": "2024-08-31",
+                "estado": "En progreso",
+                "porcentaje": 20,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Desarrollar funcionalidad de búsqueda",
+                        "descripcion": "Desarrollar la funcionalidad de búsqueda del sitio web de comercio electrónico",
+                        "estado": "Completada"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "4",
+        "nombre": "Proyecto Delta",
+        "descripcion": "Implementación de un sistema de seguridad",
+        "fecha_inicio": "2024-10-01",
+        "fecha_vencimiento": "2024-12-31",
+        "estado": "En progreso",
+        "empresa": "SecCorp",
+        "gerente": "Ana López",
+        "equipo": "Equipo de Seguridad",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Análisis de vulnerabilidades",
+                "empresa_cliente": "SecCorp",
+                "descripcion": "Analizar las vulnerabilidades del sistema",
+                "fecha_inicio": "2024-10-01",
+                "fecha_vencimiento": "2024-10-15",
+                "estado": "En progreso",
+                "porcentaje": 25,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Análisis de vulnerabilidades",
+                        "descripcion": "Analizar las vulnerabilidades del sistema de seguridad",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Implementar medidas de seguridad",
+                        "descripcion": "Implementar medidas de seguridad del sistema de seguridad",
+                        "estado": "Pendiente"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Implementación de medidas de seguridad",
+                "empresa_cliente": "SecCorp",
+                "descripcion": "Implementar medidas de seguridad",
+                "fecha_inicio": "2024-10-16",
+                "fecha_vencimiento": "2024-11-30",
+                "estado": "En progreso",
+                "porcentaje": 30,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Configurar firewall",
+                        "descripcion": "Configurar el firewall del sistema de seguridad",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Realizar pruebas de penetración",
+                        "descripcion": "Realizar pruebas de penetración del sistema de seguridad",
+                        "estado": "Pendiente"
+                    },
+                    {
+                        "id": "3",
+                        "nombre": "Documentar configuración",
+                        "descripcion": "Documentar la configuración del sistema de seguridad",
+                        "estado": "Completada"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "5",
+        "nombre": "Proyecto Epsilon",
+        "descripcion": "Desarrollo de un software de gestión",
+        "fecha_inicio": "2024-01-01",
+        "fecha_vencimiento": "2024-03-31",
+        "estado": "En progreso",
+        "empresa": "SoftCorp",
+        "gerente": "Juan Carlos",
+        "equipo": "Equipo de Desarrollo de Software",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Análisis de requisitos",
+                "empresa_cliente": "SoftCorp",
+                "descripcion": "Analizar los requisitos del software",
+                "fecha_inicio": "2024-01-01",
+                "fecha_vencimiento": "2024-01-15",
+                "estado": "En progreso",
+                "porcentaje": 40,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Diseñar interfaz de usuario",
+                        "descripcion": "Diseñar la interfaz de usuario de la aplicación de escritorio",
+                        "estado": "Completada"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Desarrollo del software",
+                "empresa_cliente": "SoftCorp",
+                "descripcion": "Desarrollar el software",
+                "fecha_inicio": "2024-01-16",
+                "fecha_vencimiento": "2024-02-28",
+                "estado": "En progreso",
+                "porcentaje": 20,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Desarrollar funcionalidad de edición",
+                        "descripcion": "Desarrollar la funcionalidad de edición de la aplicación de escritorio",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Realizar pruebas de compatibilidad",
+                        "descripcion": "Realizar pruebas de compatibilidad de la aplicación de escritorio",
+                        "estado": "Pendiente"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "6",
+        "nombre": "Proyecto Zeta",
+        "descripcion": "Implementación de un sistema de automatización",
+        "fecha_inicio": "2024-04-01",
+        "fecha_vencimiento": "2024-06-30",
+        "estado": "En progreso",
+        "empresa": "AutoCorp",
+        "gerente": "María José",
+        "equipo": "Equipo de Automatización",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Análisis de requisitos",
+                "empresa_cliente": "AutoCorp",
+                "descripcion": "Analizar los requisitos del sistema",
+                "fecha_inicio": "2024-04-01",
+                "fecha_vencimiento": "2024-04-15",
+                "estado": "En progreso",
+                "porcentaje": 30,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Análisis de requisitos",
+                        "descripcion": "Analizar los requisitos del sistema de gestión de proyectos",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Diseñar base de datos",
+                        "descripcion": "Diseñar la base de datos del sistema de gestión de proyectos",
+                        "estado": "Pendiente"
+                    },
+                    {
+                        "id": "3",
+                        "nombre": "Desarrollar módulo de reporting",
+                        "descripcion": "Desarrollar el módulo de reporting del sistema de gestión de proyectos",
+                        "estado": "Completada"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Configuración del sistema",
+                "empresa_cliente": "AutoCorp",
+                "descripcion": "Configurar el sistema de automatización",
+                "fecha_inicio": "2024-04-16",
+                "fecha_vencimiento": "2024-05-31",
+                "estado": "En progreso",
+                "porcentaje": 25,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Desarrollar módulo de gestión de tareas",
+                        "descripcion": "Desarrollar el módulo de gestión de tareas del sistema de gestión de proyectos",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Realizar pruebas de integración",
+                        "descripcion": "Realizar pruebas de integración del sistema de gestión de proyectos",
+                        "estado": "Pendiente"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "7",
+        "nombre": "Proyecto Eta",
+        "descripcion": "Desarrollo de un sitio web de comercio electrónico",
+        "fecha_inicio": "2024-07-01",
+        "fecha_vencimiento": "2024-09-30",
+        "estado": "En progreso",
+        "empresa": "EcomCorp",
+        "gerente": "Pedro Álvarez",
+        "equipo": "Equipo de Desarrollo Web",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Diseño del sitio web",
+                "empresa_cliente": "EcomCorp",
+                "descripcion": "Diseñar el sitio web de comercio electrónico",
+                "fecha_inicio": "2024-07-01",
+                "fecha_vencimiento": "2024-07-15",
+                "estado": "En progreso",
+                "porcentaje": 35,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Diseñar sitio web",
+                        "descripcion": "Diseñar el sitio web de la empresa",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Desarrollar funcionalidad de blog",
+                        "descripcion": "Desarrollar la funcionalidad de blog del sitio web de la empresa",
+                        "estado": "Pendiente"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Desarrollo del sitio web",
+                "empresa_cliente": "EcomCorp",
+                "descripcion": "Desarrollar el sitio web de comercio electrónico",
+                "fecha_inicio": "2024-07-16",
+                "fecha_vencimiento": "2024-08-31",
+                "estado": "En progreso",
+                "porcentaje": 20,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Desarrollar funcionalidad de contacto",
+                        "descripcion": "Desarrollar la funcionalidad de contacto del sitio web de la empresa",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Realizar pruebas de compatibilidad",
+                        "descripcion": "Realizar pruebas de compatibilidad de la aplicación de escritorio",
+                        "estado": "En progreso"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    },
+    {
+        "id": "8",
+        "nombre": "Proyecto Theta",
+        "descripcion": "Implementación de un sistema de control de acceso",
+        "fecha_inicio": "2024-10-01",
+        "fecha_vencimiento": "2024-12-31",
+        "estado": "En progreso",
+        "empresa": "AccCorp",
+        "gerente": "Ana Gómez",
+        "equipo": "Equipo de Control de Acceso",
+        "tareas": [
+            {
+                "id": "1",
+                "nombre": "Análisis de requisitos",
+                "empresa_cliente": "AccCorp",
+                "descripcion": "Analizar los requisitos del sistema",
+                "fecha_inicio": "2024-10-01",
+                "fecha_vencimiento": "2024-10-15",
+                "estado": "En progreso",
+                "porcentaje": 25,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Crear wireframe",
+                        "descripcion": "Crear wireframe del sitio web",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Diseñar layout",
+                        "descripcion": "Diseñar layout del sitio web",
+                        "estado": "Pendiente"
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "nombre": "Configuración del sistema",
+                "empresa_cliente": "AccCorp",
+                "descripcion": "Configurar el sistema de control de acceso",
+                "fecha_inicio": "2024-10-16",
+                "fecha_vencimiento": "2024-11-30",
+                "estado": "En progreso",
+                "porcentaje": 30,
+                "subtareas": [
+                    {
+                        "id": "1",
+                        "nombre": "Crear modelo de datos",
+                        "descripcion": "Crear modelo de datos para el blog",
+                        "estado": "Completada"
+                    },
+                    {
+                        "id": "2",
+                        "nombre": "Desarrollar vista de blog",
+                        "descripcion": "Desarrollar vista de blog del sitio web",
+                        "estado": "Pendiente"
+                    },
+                    {
+                        "id": "3",
+                        "nombre": "Desarrollar controlador de blog",
+                        "descripcion": "Desarrollar controlador de blog del sitio web",
+                        "estado": "En progreso"
+                    },
+                    {
+                        "id": "4",
+                        "nombre": "Realizar pruebas de blog",
+                        "descripcion": "Realizar pruebas de la funcionalidad de blog",
+                        "estado": "Pendiente"
+                    }
+                ]
+            }
+        ],
+        "subtareas": []
+    }
+]
