@@ -68,9 +68,7 @@ class Configuracion:
         return proyectos 
     
     def guardar_datos(self, proyectos):
-        """
-        Guarda los datos de los proyectos en los archivos JSON.
-        """
+
         datos_proyectos = []
         for proyecto in proyectos:
             datos_proyecto = {
@@ -112,8 +110,6 @@ class Configuracion:
         with open(self.ruta_datos, "w", encoding="utf-8") as archivo:
             json.dump(datos_proyectos, archivo, ensure_ascii=False, indent=4)
 
-        with open(self.ruta_subtareas, "w", encoding="utf-8") as archivo:
-            json.dump(datos_proyectos, archivo, ensure_ascii=False, indent=4)
 
 class Proyecto:
     #Se declaran los atributos que conforman al proyecto
@@ -208,7 +204,7 @@ class ProyectoManager:
 
         nuevo_proyecto = Proyecto(id, nombre, descripcion, fecha_inicio, fecha_vencimiento, estado, empresa, gerente, equipo)
         self.lista_proyectos.append(nuevo_proyecto)
-        print("\nProyecto creado con éxito.")   #AGREFAR TAREAS??? O PREGUNTO??? O NO xd!!!!!!!!!!!!!!!
+        print("\nProyecto creado con éxito.")   
 
     def modificar_proyecto(self):
         #Pedimos que nos ingrese el criterio y valor para buscar el proyecto y, se pregunta que se quiere modificar
@@ -298,7 +294,7 @@ class ProyectoManager:
        
         print("\t"+"-"*42+"\t")
         print("\t       ID. Nombre Proyecto")
-        for i, proyecto in enumerate(self.lista_proyectos, start=1):
+        for proyecto in self.lista_proyectos:
             print(f"\t\t{proyecto.id}. {proyecto.nombre}")
         print("\t"+"-"*42+"\t")
 
@@ -427,33 +423,147 @@ class ProyectoManager:
 
         #Funciones del menu: "menu_tareas_prioritarias"
     def agregar_tarea_prioritaria(self, proyecto):
-        id = input("Ingrese el ID de la tarea: ")
-        nombre = input("Ingrese el nombre de la tarea: ")
-        empresa_cliente = input("Ingrese la empresa cliente de la tarea: ")
-        descripcion = input("Ingrese la descripción de la tarea: ")
-        fecha_inicio = input("Ingrese la fecha de inicio de la tarea (dd-mm-aaaa): ")
-        fecha_vencimiento = input("Ingrese la fecha de vencimiento de la tarea (dd-mm-aaaa): ")
-        estado = input("Ingrese el estado actual de la tarea: ")
-        porcentaje = int(input("Ingrese el porcentaje de la tarea: "))
-
-        tarea = Tarea(id, nombre, empresa_cliente, descripcion, fecha_inicio, fecha_vencimiento, estado, porcentaje)
-        proyecto.tareas_prioritarias.push(tarea)
+        tarea_id = input("\nIngrese el ID de la tarea que desea agregar: ")
+        tarea = proyecto.tareas.buscar(tarea_id)
+        if tarea is not None:
+            tarea_prioritaria = proyecto.tareas_prioritarias.buscar(tarea_id)
+            if tarea_prioritaria is None:
+                proyecto.tareas_prioritarias.push(tarea)
+                print(f"\nSe agregó la tarea '{tarea.nombre}'")
+            else:
+                print("\nLa tarea ya se encuentra en la lista de tareas prioritarias.")
+        else:
+            print("\nNo se encontró la tarea especificada")
+        
 
     def eliminar_tarea_prioritaria(self, proyecto):
         if not proyecto.tareas_prioritarias.esta_vacia():
-            return proyecto.tareas_prioritarias.pop()
-        return None
+            tarea_id = input("\nIngrese el ID de la tarea que desea eliminar: ")
+            tarea_eliminar = None
+            actual = proyecto.tareas_prioritarias.cabeza
+            while actual is not None:
+                if actual.valor.id == tarea_id:
+                    tarea_eliminar = actual
+                    break
+                actual = actual.siguiente
+            if tarea_eliminar is not None:
+                proyecto.tareas_prioritarias.eliminar(tarea_eliminar)
+                print("\nTarea prioritaria eliminada:")
+                print("ID:", tarea_eliminar.valor.id)
+                print("Nombre:", tarea_eliminar.valor.nombre)
+                print("Empresa cliente:", tarea_eliminar.valor.empresa_cliente)
+                print("Descripción:", tarea_eliminar.valor.descripcion)
+                print("Fecha de inicio:", tarea_eliminar.valor.fecha_inicio.strftime("%Y-%m-%d"))
+                print("Fecha de vencimiento:", tarea_eliminar.valor.fecha_vencimiento.strftime("%Y-%m-%d"))
+                print("Estado:", tarea_eliminar.valor.estado)
+                print("Porcentaje:", tarea_eliminar.valor.porcentaje)
+            else:
+                print("\nNo se encontró la tarea especificada")
+        else:
+            print("\nNo hay tareas prioritarias para eliminar.")
 
     def consultar_tarea_prioritaria(self, proyecto):
         if not proyecto.tareas_prioritarias.esta_vacia():
-            return proyecto.tareas_prioritarias.peek()
-        return None
+            tarea = proyecto.tareas_prioritarias.peek()
+            print("\nTarea prioritaria:")
+            print("ID:", tarea.id)
+            print("Nombre:", tarea.nombre)
+            print("Empresa cliente:", tarea.empresa_cliente)
+            print("Descripción:", tarea.descripcion)
+            print("Fecha de inicio:", tarea.fecha_inicio.strftime("%Y-%m-%d"))
+            print("Fecha de vencimiento:", tarea.fecha_vencimiento.strftime("%Y-%m-%d"))
+            print("Estado:", tarea.estado)
+            print("Porcentaje:", tarea.porcentaje)
+        else:
+            print("\nNo hay tareas prioritarias.")
 
     def tiempo_total_tareas_prioritarias(self, proyecto):
+        if not proyecto.tareas_prioritarias.esta_vacia():
+            tareas_prioritarias = []
+            while not proyecto.tareas_prioritarias.esta_vacia():
+                tarea = proyecto.tareas_prioritarias.pop()
+                tareas_prioritarias.append(tarea)
+            tarea_duraciones = [(tarea.fecha_vencimiento - tarea.fecha_inicio).days for tarea in tareas_prioritarias]
+            total_tiempo = sum(tarea_duraciones)
+            print(f"\nTiempo total de tareas prioritarias: {total_tiempo} días")
+            for tarea in tareas_prioritarias:
+                proyecto.tareas_prioritarias.push(tarea)
+        else:
+            print("\nNo hay tareas prioritarias para calcular el tiempo total.")
+            
+        #colas
+
+    def agregar_tareas_proximas_automatico(self):
+        today = datetime.today()
+        for proyecto in self.lista_proyectos:
+            for tarea in proyecto.tareas.recorrer():
+                tiempo_restante = (tarea.fecha_vencimiento - today).days
+                if tiempo_restante < 15:
+                    self.tareas_proximas_a_vencer.encolar(tarea)
+    
+    def agregar_tareas_proximas_a_vencer(self, proyecto):
+        tarea_id = input("\nIngrese el ID de la tarea que desea agregar: ")
+        tarea = proyecto.tareas.buscar(tarea_id)
+        if tarea is not None:
+            proyecto.tareas_proximas_a_vencer.encolar(tarea)
+            print(f"\nSe agregó la tarea '{tarea.nombre}'")
+        else:
+            print("\nNo se encontró la tarea especificada")
+            
+    def eliminar_tarea_proxima_vencer(self, proyecto):
+        if not proyecto.tareas_proximas_a_vencer.esta_vacia():
+            tarea_id = input("\nIngrese el ID de la tarea que desea eliminar: ")
+            tarea_eliminar = None
+            tarea_actual = proyecto.tareas_proximas_a_vencer.cabeza
+            while tarea_actual is not None:
+                tarea = tarea_actual.valor
+                if tarea.id == tarea_id:
+                    tarea_eliminar = tarea
+                    break
+                tarea_actual = tarea_actual.siguiente
+            if tarea_eliminar is not None:
+                proyecto.tareas_proximas_a_vencer.eliminar(tarea_eliminar)
+                print(f"\nSe eliminó la tarea '{tarea_eliminar.nombre}'")
+            else:
+                print("\nNo se encontró la tarea especificada")
+        else:
+            print("\nNo hay tareas próximas a vencer.")
+    
+    def consultar_tarea_proxima_vencer(self, proyecto):
+        if not proyecto.tareas_proximas_a_vencer.esta_vacia():
+            tarea_actual = proyecto.tareas_proximas_a_vencer.cabeza
+            while tarea_actual is not None:
+                tarea = tarea_actual.valor
+                print("\nTarea próxima a vencer:")
+                print("ID:", tarea.id)
+                print("Nombre:", tarea.nombre)
+                print("Empresa cliente:", tarea.empresa_cliente)
+                print("Descripción:", tarea.descripcion)
+                print("Fecha de inicio:", tarea.fecha_inicio.strftime("%Y-%m-%d"))
+                print("Fecha de vencimiento:", tarea.fecha_vencimiento.strftime("%Y-%m-%d"))
+                print("Estado:", tarea.estado)
+                print("Porcentaje:", tarea.porcentaje)
+                print("")  # Agregué un espacio en blanco entre cada tarea
+                tarea_actual = tarea_actual.siguiente
+        else:
+            print("\nNo hay tareas próximas a vencer.")
+
+    def tiempo_total_tareas_proximas_vencer(self, proyecto):
         tiempo_total = 0
-        for tarea in proyecto.tareas_prioritarias.elementos:
-            tiempo_total += tarea.fecha_vencimiento - tarea.fecha_inicio
-        return tiempo_total
+        cola_copia = Cola()  # Crea una nueva cola
+        cola_temporal = Cola()  # Crea una cola temporal
+        while proyecto.tareas_proximas_a_vencer.cabeza:
+            tarea = proyecto.tareas_proximas_a_vencer.desencolar()
+            cola_temporal.encolar(tarea)  # Enqueue el elemento a la cola temporal
+            cola_copia.encolar(tarea)  # Enqueue el elemento a la nueva cola
+        while cola_copia.cabeza:
+            tarea = cola_copia.desencolar()
+            delta = tarea.fecha_vencimiento - tarea.fecha_inicio
+            tiempo_total += delta.days
+        print("\nTiempo total de tareas próximas a vencer:", tiempo_total, "días")
+        while cola_temporal.cabeza:  # Devuelve los elementos a la cola original
+            tarea = cola_temporal.desencolar()
+            proyecto.tareas_proximas_a_vencer.encolar(tarea)
     
 #DESDE AQUIIIII CLASE MODULO 3
 
@@ -584,24 +694,24 @@ class ProyectoManager:
             print("  9. Filtrar tareas por fechas")
             print("  10. Salir")
             print("-"*60)
-            n = int(input("Seleccione una opción (1-10): "))
+            n = input("Seleccione una opción (1-10): ")
 
-            if n == 1:
+            if n == "1":
                 self.crear_proyecto()
 
-            elif n == 2:
+            elif n == "2":
                 self.modificar_proyecto()
 
-            elif n == 3:
+            elif n == "3":
                 self.consultar_proyecto()
 
-            elif n == 4:
+            elif n == "4":
                 self.eliminar()
 
-            elif n == 5:
+            elif n == "5":
                 self.listar_nombres_proyectos()
             
-            elif n == 6:
+            elif n == "6":
                 criterio = input("\nIntroduzca el criterio de búsqueda: ")
                 valor = input("Introduzca el valor del criterio: ")
                 print(f"\n\tLista de Proyecto por {criterio}: {valor}")
@@ -609,11 +719,19 @@ class ProyectoManager:
                 proyectos = self.buscar_proyecto_filtro(criterio, valor)
                 self.consultar(proyectos)
 
-            elif n == 7:
+            elif n == "7":
                 t = True
                 self.listar_nombres_proyectos()
-                f = input("\nSeleccione el proyecto por id o nombre: ")
-                proyecto_selec = self.buscar_proyecto("id",f) #hacer que se pueda hacer por nombre
+                f = input("\nSeleccione el proyecto si es por id o nombre: ")
+                if f == "id":
+                    s = input("Ingrese el id del proyecto: ")
+                    proyecto_selec = self.buscar_proyecto("id",s)
+                elif f == "nombre":
+                    s = input("Ingrese el nombre del proyecto: ")
+                    proyecto_selec = self.buscar_proyecto("nombre",s)
+                else:
+                    print("\n       Opción no válida. Por favor, intente de nuevo.")
+                    return
                 while t:
                     print(f"\n          Gestión de Tareas del Proyecto: {proyecto_selec.nombre}")
                     print("     "+"-"*55)
@@ -629,18 +747,18 @@ class ProyectoManager:
                     print("       10. Consultar todas las tarear por estado") #tal vez se queda
                     print("       11. Salir al menu principal")
 
-                    op = int(input("       Seleccione una opción (1-10): "))
+                    op = input("       Seleccione una opción (1-10): ")
                     print("")
-                    if op == 1:
+                    if op == "1":
                         self.ordenar_tareas_por_fecha_inicio(proyecto_selec)
-                    elif op == 2:
+                    elif op == "2":
                         self.agregar_nuevatarea(proyecto_selec)
                         print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
                         print("     "+"-"*55)
                         tareas = proyecto_selec.tareas.recorrer()
                         self.mostrar_tareas(tareas)
                         print("     "+"-"*55)
-                    elif op == 3:
+                    elif op == "3":
                         self.insertar_tarea(proyecto_selec)
                         print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
                         print("     "+"-"*55)
@@ -648,16 +766,16 @@ class ProyectoManager:
                         self.mostrar_tareas(tareas)
                         print("     "+"-"*55)
 
-                    elif op == 4:
+                    elif op == "4":
                         self.eliminar_tarea(proyecto_selec)
                         print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
                         print("     "+"-"*55)
                         tareas = proyecto_selec.tareas.recorrer()
                         self.mostrar_tareas(tareas)
                         print("     "+"-"*55)
-                    elif op == 5:
+                    elif op == "5":
                         self.consultar_tarea(proyecto_selec)
-                    elif op == 6:
+                    elif op == "6":
                         self.actualizar_tarea(proyecto_selec)
                         print(f"\n              Tareas del Proyecto: {proyecto_selec.nombre}")
                         print("     "+"-"*55)
@@ -665,7 +783,7 @@ class ProyectoManager:
                         self.mostrar_tareas(tareas)
                         print("     "+"-"*55)
 
-                    elif op == 7:
+                    elif op == "7":
                         cc = True
                         while cc:
                             print("\n                         Tareas Prioritarias") 
@@ -676,21 +794,21 @@ class ProyectoManager:
                             print("            4. Tiempo Total de Tareas Prioritarias")
                             print("            5. Salir al menu anterior")
                             print("          "+"-"*50)
-                            op = int(input("          Seleccione una opción (1-5): "))
-                            if op == 1:
-                                return 
-                            elif op == 2:
-                                return
-                            elif op == 3:
-                                return
-                            elif op == 4:
-                                return
-                            elif op == 5:
+                            op = input("          Seleccione una opción (1-5): ")
+                            if op == "1":
+                                self.agregar_tarea_prioritaria(proyecto_selec)
+                            elif op == "2":
+                                self.eliminar_tarea_prioritaria(proyecto_selec)
+                            elif op == "3":
+                                self.consultar_tarea_prioritaria(proyecto_selec)
+                            elif op == "4":
+                                self.tiempo_total_tareas_prioritarias(proyecto_selec)
+                            elif op == "5":
                                 print("\n          Saliendo del menu...")
                                 cc = False
                             else:
                                 print("\n          Opción no válida. Por favor, intente de nuevo.")
-                    elif op == 8:
+                    elif op == "8":
                         cf = True
                         while cf:
                             print("\n                         Tareas Por Finalizar")
@@ -701,22 +819,22 @@ class ProyectoManager:
                             print("            4. Tiempo Total de Tareas ")
                             print("            5. Salir al menu anterior")
                             print("          "+"-"*50)
-                            op = int(input("       Seleccione una opción (1-5): "))
-                            if op == 1:
-                                return 
-                            elif op == 2:
-                                return
-                            elif op == 3:
-                                return
-                            elif op == 4:
-                                return
-                            elif op == 5:
+                            op = input("       Seleccione una opción (1-5): ")
+                            if op == "1":
+                                self.agregar_tareas_proximas_a_vencer(proyecto_selec)
+                            elif op == "2":
+                                self.eliminar_tarea_proxima_vencer(proyecto_selec)
+                            elif op == "3":
+                                self.consultar_tarea_proxima_vencer(proyecto_selec)
+                            elif op == "4":
+                                self.tiempo_total_tareas_proximas_vencer(proyecto_selec)
+                            elif op == "5":
                                 print("\n          Saliendo del menu...")
                                 cf = False
                             else:
                                 print("\n          Opción no válida. Por favor, intente de nuevo.")
                     
-                    elif op == 9:
+                    elif op == "9":
                         print(f"\n           Filtrar tareas del {proyecto_selec.nombre} por fechas")
                         print("     "+"-"*55)
                         print("       1. Filtrar tareas por fecha de inicio")
@@ -726,40 +844,40 @@ class ProyectoManager:
                         print("       5. Salir al menu principal")
                         print("     "+"-"*55)
 
-                        op = int(input("       Seleccione una opción (1-5): "))
-                        if op == 1:
+                        op = input("       Seleccione una opción (1-5): ")
+                        if op == "1":
                             fecha_inicio_desde = datetime.strptime(input("          Ingrese la fecha de inicio desde (yyyy-mm-dd): "), "%Y-%m-%d")
                             fecha_inicio_hasta = datetime.strptime(input("          Ingrese la fecha de inicio hasta (yyyy-mm-dd): "), "%Y-%m-%d")
                             self.filtrar_tareas_por_fecha_inicio_proy(proyecto_selec, fecha_inicio_desde, fecha_inicio_hasta)
-                        elif op == 2:
+                        elif op == "2":
                             fecha_vencimiento_desde = datetime.strptime(input("          Ingrese la fecha de vencimiento desde (yyyy-mm-dd): "), "%Y-%m-%d")
                             fecha_vencimiento_hasta = datetime.strptime(input("          Ingrese la fecha de vencimiento hasta (yyyy-mm-dd): "), "%Y-%m-%d")
                             self.filtrar_tareas_por_fecha_vencimiento_proy(proyecto_selec, fecha_vencimiento_desde, fecha_vencimiento_hasta)
-                        elif op == 3:
+                        elif op == "3":
                             fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio antes de (yyyy-mm-dd): "), "%Y-%m-%d")
                             self.filtrar_tareas_por_fecha_inicio_antes_proy(proyecto_selec, fecha_inicio)
-                        elif op == 4:
+                        elif op == "4":
                             fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio después de (yyyy-mm-dd): "), "%Y-%m-%d")
                             self.filtrar_tareas_por_fecha_inicio_despues_proy(proyecto_selec, fecha_inicio)
-                        elif op == 5:
+                        elif op == "5":
                             print("\n          Saliendo del menu...")
                         else:
                             print("\n          Opción no válida. Por favor, intente de nuevo.")
 
-                    elif op == 10:
+                    elif op == "10":
                         estado = input("Ingrese el estado a consultar en las tareas")
                         print("")
                         self.consultar_tareas_por_estado(f, estado)
 
-                    elif op == 11:
+                    elif op == "11":
                         print("\n       Saliendo del menu...")
                         t = False
                     else:
                         print("\n       Opción no válida. Por favor, intente de nuevo.")
                     
-            elif n == 8:
+            elif n == "8":
                 self.filtrar_todas_tareas_por_estado()
-            elif n == 9:
+            elif n == "9":
                 
                 print("\n                   Filtrar tareas por fechas")
                 print("     "+"-"*55)
@@ -770,30 +888,30 @@ class ProyectoManager:
                 print("       5. Salir al menu principal")
                 print("     "+"-"*55)
 
-                op = int(input("       Seleccione una opción (1-5): "))
-                if op == 1:
+                op = input("       Seleccione una opción (1-5): ")
+                if op == "1":
                     fecha_inicio_desde = datetime.strptime(input("          Ingrese la fecha de inicio desde (yyyy-mm-dd): "), "%Y-%m-%d")
                     fecha_inicio_hasta = datetime.strptime(input("          Ingrese la fecha de inicio hasta (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_inicio(fecha_inicio_desde, fecha_inicio_hasta)
-                elif op == 2:
+                elif op == "2":
                     fecha_vencimiento_desde = datetime.strptime(input("          Ingrese la fecha de vencimiento desde (yyyy-mm-dd): "), "%Y-%m-%d")
                     fecha_vencimiento_hasta = datetime.strptime(input("          Ingrese la fecha de vencimiento hasta (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_vencimiento(fecha_vencimiento_desde, fecha_vencimiento_hasta)
-                elif op == 3:
+                elif op == "3":
                     fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio antes de (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_inicio_antes(fecha_inicio)
-                elif op == 4:
+                elif op == "4":
                     fecha_inicio = datetime.strptime(input("          Ingrese la fecha de inicio después de (yyyy-mm-dd): "), "%Y-%m-%d")
                     self.filtrar_tareas_por_fecha_inicio_despues(fecha_inicio)
-                elif op == 5:
+                elif op == "5":
                     print("\n          Saliendo del menu...")
                 else:
                     print("\n          Opción no válida. Por favor, intente de nuevo.")
 
-            elif n ==10:
+            elif n =="10":
                 return
 
-            elif n == 11:
+            elif n == "11":
 
                 print("\nSaliendo del programa...")
                 break
@@ -812,4 +930,4 @@ manager = ProyectoManager(pross)
 manager.menu()
 pross = manager.lista_proyectos
 
-pro.guardar_datos(pross)
+#pro.guardar_datos(pross)
